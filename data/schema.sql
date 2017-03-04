@@ -80,8 +80,8 @@ CREATE VIEW mill.game_question AS
 -- Todo: use trigger to enforce one answer per (question, game)
 CREATE TABLE mill.game_answer (
   id BIGINT PRIMARY KEY DEFAULT mill.next_id(),
-  game_id BIGINT NOT NULL REFERENCES answer (id) ON DELETE CASCADE,
-  answer_id BIGINT NOT NULL REFERENCES answer (id) ON DELETE CASCADE
+  game_id BIGINT NOT NULL REFERENCES mill.answer (id) ON DELETE CASCADE,
+  answer_id BIGINT NOT NULL REFERENCES mill.answer (id) ON DELETE CASCADE
 );
 
 -- Todo: this table introduces redundant
