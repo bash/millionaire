@@ -89,7 +89,7 @@ CREATE TABLE mill.game_answer (
 -- Todo: ... without deleting the user/game itself
 -- Todo: review naming
 -- Todo: should we still reference the user?
-CREATE TABLE score (
+CREATE TABLE mill.score (
   id BIGINT PRIMARY KEY DEFAULT mill.next_id(),
   player_name VARCHAR(255) NOT NULL,
   score INT NOT NULL
