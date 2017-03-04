@@ -37,7 +37,7 @@ CREATE UNIQUE INDEX admin_lower_username ON mill.admin (lower(username));
 
 CREATE TABLE mill.category (
   id BIGINT PRIMARY KEY DEFAULT mill.next_id(),
-  name VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE mill.question (
