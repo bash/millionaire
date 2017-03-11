@@ -1,0 +1,17 @@
+@font-face {
+  font-family: Vollkorn;
+  src:  url(/fonts/Vollkorn-Regular.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: Vollkorn;
+  font-weight: 600;
+  src:  url(/fonts/Vollkorn-Semibold.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: Vollkorn;
+  font-weight: 700;
+  src: local('Vollkorn Bold'), url(/fonts/Vollkorn-Bold.woff2) format('woff2');
+}
+
