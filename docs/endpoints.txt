@@ -1,0 +1,27 @@
+POST 			-> /auth
+
+POST, GET 		-> /questions
+GET, DELETE		-> /questions/:id
+PUT				-> /questions/:id/title
+PUT				-> /questions/:id/category
+POST			-> /questions/:id/answers
+
+DELETE, GET		-> /answers/:id
+PUT				-> /answers/:id/title
+
+POST, GET		-> /categories
+GET, DELETE		-> /categories/:id
+PUT				-> /categories/:id/title
+
+GET				-> /scores
+DELETE			-> /scores/:id
+
+
+
+POST 			-> /games
+
+GET				-> /game
+GET				-> /game/question
+POST			-> /game/joker
+POST			-> /game/answer
+POST			-> /game/leave
