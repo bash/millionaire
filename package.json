@@ -1,0 +1,24 @@
+{
+  "name": "millionaire",
+  "version": "0.1.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bash/millionaire.git"
+  },
+  "author": "Ruben Schmidmeister <ruben.schmidmeister@icloud.com>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/bash/millionaire/issues"
+  },
+  "homepage": "https://github.com/bash/millionaire#readme",
+  "devDependencies": {
+    "autoprefixer": "^6.7.7",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-preset-env": "^1.2.1",
+    "less": "^2.7.2",
+    "postcss-cli": "^3.0.0-beta",
+    "rollup": "^0.41.5",
+    "rollup-plugin-babel": "^2.7.1"
+  }
+}
