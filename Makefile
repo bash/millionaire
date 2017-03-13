@@ -13,8 +13,8 @@ all: target/$(BUILD_MODE)/millionaire
 
 target/$(BUILD_MODE)/millionaire: $(RUST_FILES)
 ifeq ($(BUILD_MODE), release)
-	cargo build --release
+	$(CARGO) build --release
 else
-	cargo build
+	$(CARGO) build
 endif
 
