@@ -1,21 +1,21 @@
 html {
-  /* Fix IOS Safari's behaviour in landscape mode */
+  // Fix IOS Safari's behaviour in landscape mode
   -webkit-text-size-adjust: 100%;
 }
 
 [hidden] {
-  /* make sure all browsers hide elements with [hidden] */
+  // make sure all browsers hide elements with [hidden]
   display: none !important;
 }
 
 fieldset,
 img {
-  /* in webkit browsers this defaults to -webkit-min-content for fieldsets */
-  /* ... and for some reason the safari technology preview needs this for images */
+  // in webkit browsers this defaults to -webkit-min-content for fieldsets
+  // ... and for some reason the safari technology preview needs this for images
   min-width: 0;
 }
 
-/* fixes issues with additional height coming from the shadow dom */
+// fixes issues with additional height coming from the shadow dom
 input::-webkit-datetime-edit-fields-wrapper {
   padding: 0;
 }
