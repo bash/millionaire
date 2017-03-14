@@ -1,7 +1,8 @@
 SHELL := /bin/bash
 PATH  := $(PATH):./node_modules/.bin
 CARGO := cargo
-LESSC := lessc
+LESSC := lessc --strict-math=on
+ROLLUP := rollup -c .rollup.config.js
 
 ifndef BUILD_MODE
 BUILD_MODE = debug
@@ -13,7 +14,7 @@ JS_FILES := $(shell find js -name "*.js")
 
 .PHONY: all binary
 
-all: target/$(BUILD_MODE)/millionaire public/css/app.css public/js/app.js
+all: target/$(BUILD_MODE)/millionaire public/css/app.css public/js/app.js public/js/sw.js
 
 target/$(BUILD_MODE)/millionaire: $(RUST_FILES)
 ifeq ($(BUILD_MODE), release)
@@ -24,8 +25,12 @@ endif
 
 public/css/app.css: $(LESS_FILES)
 	mkdir -p $(@D)
-	$(LESSC) --strict-math=on less/app.less > $@
+	$(LESSC) less/app.less > $@
 
 public/js/app.js: $(JS_FILES)
 	@mkdir -p $(@D)
-	rollup -c .rollup.config.js -o $@ js/app.js
+	$(ROLLUP) -o $@ js/app.js
+
+public/js/sw.js: $(JS_FILES)
+	@mkdir -p $(@D)
+	$(ROLLUP) -o $@ js/sw.js

@@ -38,6 +38,8 @@ export class AppRouter extends HTMLElement {
     const name = resolve(this.route)
     const template = templateFile(name)
 
+    // TODO: implement cancelling of rendering
+
     fetch(template)
       .then((resp) => resp.text())
       .then((text) => {
