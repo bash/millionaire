@@ -1,5 +1,5 @@
 import { EventName } from '../event'
-import { routes } from '../data/routes'
+import { routes, templateFile } from '../data/routes'
 
 /**
  *
@@ -36,7 +36,7 @@ export class AppRouter extends HTMLElement {
 
   _render () {
     const name = resolve(this.route)
-    const template = `/templates/${name}.html`
+    const template = templateFile(name)
 
     fetch(template)
       .then((resp) => resp.text())
