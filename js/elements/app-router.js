@@ -1,4 +1,4 @@
-import { EventName } from '../event'
+import { EventName } from '../data/event'
 import { routes, templateFile } from '../data/routes'
 
 /**
