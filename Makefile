@@ -12,7 +12,7 @@ RUST_FILES := $(shell find src -name "*.rs")
 LESS_FILES := $(shell find less -name "*.less")
 JS_FILES := $(shell find js -name "*.js")
 
-.PHONY: all binary
+.PHONY: all binary server
 
 all: target/$(BUILD_MODE)/millionaire public/css/app.css public/js/app.js public/js/sw.js
 
@@ -34,3 +34,6 @@ public/js/app.js: $(JS_FILES)
 public/js/sw.js: $(JS_FILES)
 	@mkdir -p $(@D)
 	$(ROLLUP) -o $@ js/sw.js
+
+server:
+	cd public/ && simplehttp2server -config server.json
