@@ -3,7 +3,8 @@
  * @type {{}}
  */
 export const routes = Object.freeze({
-  '/': 'home'
+  '/': 'home',
+  '/game': 'game'
 })
 
 export const templateFile = (name) => `/templates/${name}.html`

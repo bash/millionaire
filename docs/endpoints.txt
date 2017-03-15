@@ -24,4 +24,4 @@ GET				-> /game
 GET				-> /game/question
 POST			-> /game/joker
 POST			-> /game/answer
-POST			-> /game/leave
+POST			-> /game/collect
