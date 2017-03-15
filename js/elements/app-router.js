@@ -23,14 +23,14 @@ export class AppRouter extends HTMLElement {
   }
 
   connectedCallback () {
-    this.addEventListener(EventName.Route, this._onRoute)
+    this.ownerDocument.addEventListener(EventName.Route, this._onRoute)
     this.ownerDocument.defaultView.addEventListener('popstate', this._onPopState)
 
     this._setRouteFromPath()
   }
 
   disconnectedCallback() {
-    this.addEventListener(EventName.Route, this._onRoute)
+    this.ownerDocument.addEventListener(EventName.Route, this._onRoute)
     this.ownerDocument.defaultView.removeEventListener('popstate', this._onPopState)
   }
 

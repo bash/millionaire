@@ -9,7 +9,15 @@
     <link rel="stylesheet" href="/css/app.css"/>
 </head>
 <body>
-    <app-router></app-router>
+    <header class="page-header">
+        <div class="content">
+            <a href="/" is="app-link">Wer wird Millionär?</a>
+        </div>
+    </header>
+
+    <main class="page-content">
+        <app-router></app-router>
+    </main>
 
     <script src="/polyfills/custom-elements.js" defer></script>
     <script src="/js/app.js" defer></script>

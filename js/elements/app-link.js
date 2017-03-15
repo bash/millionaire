@@ -22,7 +22,6 @@ export class AppLink extends HTMLAnchorElement {
    * @private
    */
   _onClick (event) {
-    console.log('click')
     event.preventDefault()
 
     this.dispatchEvent(new CustomEvent(EventName.Route, { bubbles: true, detail: { route: this.pathname } }))
