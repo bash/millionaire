@@ -4,14 +4,14 @@ import { routes, templateFile } from '../data/routes'
 /**
  *
  * @param {string} path
- * @returns {string}
+ * @returns {(function():(string|Promise<String>))}
  */
-const resolve = (path) => {
+const createResolver = (path) => {
   if (routes.hasOwnProperty(path)) {
     return routes[ path ]
   }
 
-  return '404'
+  return () => '404'
 }
 
 export class AppRouter extends HTMLElement {
@@ -29,22 +29,25 @@ export class AppRouter extends HTMLElement {
     this._setRouteFromPath()
   }
 
-  disconnectedCallback() {
+  disconnectedCallback () {
     this.ownerDocument.addEventListener(EventName.Route, this._onRoute)
     this.ownerDocument.defaultView.removeEventListener('popstate', this._onPopState)
   }
 
   _render () {
-    const name = resolve(this.route)
-    const template = templateFile(name)
+    const resolver = createResolver(this.route)
+    const templateName = Promise.resolve(resolver())
 
-    // TODO: implement cancelling of rendering
+    const templateUrl = templateName
+      .then((name) => templateFile(name))
 
-    fetch(template)
+    const templateContent = templateUrl
+      .then((template) => fetch(template))
       .then((resp) => resp.text())
-      .then((text) => {
-        this.innerHTML = text
-      })
+
+    return templateContent.then((html) => {
+      this.innerHTML = html
+    })
   }
 
   /**
@@ -53,7 +56,7 @@ export class AppRouter extends HTMLElement {
    * @private
    */
   _onRoute (event) {
-    this.route = event.detail.route
+    this.setRoute(event.detail.route, event.detail.replace)
   }
 
   _onPopState () {
@@ -76,10 +79,17 @@ export class AppRouter extends HTMLElement {
   /**
    *
    * @param {string} value
+   * @param {boolean} replace
    */
-  set route (value) {
+  setRoute (value, replace = false) {
     this._route = value
-    this.ownerDocument.defaultView.history.pushState(null, '', value)
+
+    if (replace) {
+      this.ownerDocument.defaultView.history.replaceState(null, '', value)
+    } else {
+      this.ownerDocument.defaultView.history.pushState(null, '', value)
+    }
+
     this._render()
   }
 }
