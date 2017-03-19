@@ -3,6 +3,9 @@
  * @returns {Promise<{ state: string }>}
  */
 export function fetchGameState() {
-  return fetch('/api/game')
-    .then((resp) => resp.json())
+
+  return Promise.resolve({ state: 'initial' })
+
+  /* return fetch('/api/game')
+    .then((resp) => resp.json()) */
 }

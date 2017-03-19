@@ -1,4 +1,50 @@
-<label>
-    Name
-    <input type="text" name="name" />
-</label>
+<!-- todo: move this to some sort of partial -->
+<header class="page-header">
+    <div class="content">
+        <a href="/" is="app-link">Wer wird Millionär?</a>
+    </div>
+</header>
+
+<section class="page-content">
+
+    <register-form>
+
+        <section class="form-group">
+            <h2 class="title">Bitte gib deinen Namen hier ein:</h2>
+            <input type="text" placeholder="Name" name="name" class="basic-input" autocomplete="off"/>
+        </section>
+
+        <section class="form-group">
+            <h2 class="title">Mit welchen Kategorien möchtest du spielen?</h2>
+
+
+            <category-picker class="basic-options">
+
+                <label class="option">
+                    <input type="checkbox" is="category-pick" value="BBB">
+                    <span class="label">BBB</span>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" is="category-pick" value="Natur">
+                    <span class="label">Natur</span>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" is="category-pick" value="Allgemeinwissen">
+                    <span class="label">Allgemeinwissen</span>
+                </label>
+
+                <label class="option">
+                    <input type="checkbox" is="category-pick" value="Politik">
+                    <span class="label">Politik</span>
+                </label>
+
+            </category-picker>
+
+        </section>
+
+    </register-form>
+
+
+</section>

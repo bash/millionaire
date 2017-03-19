@@ -1,0 +1,27 @@
+.basic-input {
+  width: 100%;
+  padding: 20px 36px;
+  border-radius: 8px;
+  background-color: @brand-color;
+  color: #fff;
+  opacity: .56;
+  transition: opacity .125s;
+
+  &:focus {
+    opacity: 1;
+  }
+
+  @placeholder-color: rgba(0, 0, 0, .7);
+
+  &::-moz-placeholder {
+    color: @placeholder-color;
+  }
+
+  &::-webkit-input-placeholder {
+    color: @placeholder-color;
+  }
+
+  &:-ms-input-placeholder {
+    color: @placeholder-color;
+  }
+}

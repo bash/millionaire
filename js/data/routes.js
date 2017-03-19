@@ -20,7 +20,7 @@ const gameResolver = () => {
  * @type {{}}
  */
 export const routes = Object.freeze({
-  '/': () => 'home',
+  '/': () => 'landing',
   '/game': gameResolver
 })
 

@@ -1,0 +1,33 @@
+.basic-options {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -12px;
+
+  > .option {
+    padding: 12px;
+    flex-basis: 50%;
+    display: block;
+  }
+
+  > .option > input {
+    display: none;
+  }
+
+  > .option > .label {
+    display: block;
+    padding: 20px 36px;
+    border-radius: 8px;
+    background-color: @brand-color;
+    color: #fff;
+    opacity: .56;
+    transition: opacity .125s;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+  }
+
+  > .option > input:checked + .label {
+    opacity: 1;
+  }
+}
