@@ -1,0 +1,10 @@
+localhost:8000
+root public
+tls off
+
+proxy /api localhost:3000
+
+rewrite {
+ if {path} not_match /api
+ to {path} /index.html
+}

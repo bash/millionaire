@@ -21,6 +21,3 @@ public/js/app.js: $(JS_FILES)
 public/js/sw.js: $(JS_FILES)
 	@mkdir -p $(@D)
 	$(ROLLUP) -o $@ js/sw.js
-
-server:
-	cd public/ && simplehttp2server -config server.json
