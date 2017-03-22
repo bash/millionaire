@@ -1,15 +1,9 @@
 /**
  *
- * @returns {function(*)}
+ * @returns {function(Repository)}
  */
-module.exports = function (pool) {
+module.exports = function (repository) {
   return async (ctx) => {
-    const result = await pool.query('SELECT * FROM mill.category')
-
-    const rows = result.rows.map(({ id, name }) => {
-      return { id: Number(id), name }
-    })
-
-    ctx.body = rows
+    ctx.body = await repository.findCategories()
   }
 }
