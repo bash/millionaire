@@ -12,8 +12,8 @@ const getCategories = require('./handlers/get-categories')
 const app = new Application()
 
 const pool = new Pool({
-  user: 'ruby',
-  database: 'ruby'
+  user: 'postgres',
+  database: 'postgres'
 })
 
 const repository = new Repository(pool)
