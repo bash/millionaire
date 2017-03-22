@@ -12,5 +12,7 @@ app.use((ctx) => {
   ctx.body = { session: ctx.state.session }
 })
 
-app.listen(3000)
+app.listen(3000, () => {
+  console.log('Listening on :3000')
+})
 
