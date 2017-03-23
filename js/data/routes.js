@@ -1,8 +1,15 @@
-import { fetchGameState } from '../fetch'
+import { fetchGameState, fetchCategories } from '../fetch'
+
+const fetchRegisterData = () => {
+  return fetchCategories()
+    .then((categories) => {
+      return { categories }
+    })
+}
 
 const gameTemplates = {
-  initial: 'register',
-  started: 'question'
+  initial: { templateName: 'register', fetchData: fetchRegisterData },
+  started: { templateName: 'question', fetchData: () => {} }
 }
 
 const gameResolver = () => {
@@ -20,7 +27,7 @@ const gameResolver = () => {
  * @type {{}}
  */
 export const routes = Object.freeze({
-  '/': () => 'landing',
+  '/': () => ({ templateName: 'landing', fetchData: () => {} }),
   '/game': gameResolver
 })
 

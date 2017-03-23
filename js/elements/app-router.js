@@ -36,16 +36,26 @@ export class AppRouter extends HTMLElement {
 
   _render () {
     const resolver = createResolver(this.route)
-    const templateName = Promise.resolve(resolver())
+    const resolved = Promise.resolve(resolver())
 
-    const templateUrl = templateName
-      .then((name) => templateFile(name))
+    const templateUrl = resolved
+      .then(({ templateName }) => templateFile(templateName))
 
     const templateContent = templateUrl
       .then((template) => fetch(template))
       .then((resp) => resp.text())
 
-    return templateContent.then((html) => {
+    const data = resolved
+      .then(({ fetchData }) => {
+        return fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
+      })
+
+    const html = Promise.all([data, templateContent])
+      .then(([data, template]) => {
+        return Mustache.render(template, data)
+      })
+
+    return html.then((html) => {
       this.innerHTML = html
     })
   }
