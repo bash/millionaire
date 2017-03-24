@@ -56,6 +56,11 @@ export class AppView extends HTMLElement {
     const $header = view.querySelector('.page-header')
     const $content = view.querySelector('.page-content')
 
+    $title.style.zIndex = 1
+    $header.style.backgroundColor = 'transparent'
+    $header.style.color = 'transparent'
+    $content.style.opacity = 0
+
     const titleBox = $title.getBoundingClientRect()
     const transform = titleBox.top + window.scrollY
 
@@ -75,16 +80,8 @@ export class AppView extends HTMLElement {
 
     const titleAnimation = $title.animate(
       [
-        {
-          fontSize: '90px',
-          padding: '0',
-          transform: 'none'
-        },
-        {
-          fontSize: '36px',
-          padding: '25px',
-          transform: `translateY(-${transform}px)`
-        }
+        { transform: 'none' },
+        { transform: `translateY(-${transform}px) scale(.4) translateY(-${transform * 0.4 / 2}px) translateY(4px)` }
       ],
       {
         duration: 300,
@@ -94,8 +91,6 @@ export class AppView extends HTMLElement {
     )
 
     view.show()
-    $header.style.opacity = 0
-    $content.style.opacity = 0
 
     const contentAnimation = $content.animate(
       [
@@ -112,16 +107,22 @@ export class AppView extends HTMLElement {
 
     await finished(titleAnimation)
 
-    const headerAnimation = $title.animate(
+    const headerTextAnimation = $title.animate(
       [
-        {
-          backgroundColor: 'transparent',
-          color: 'currentColor'
-        },
-        {
-          backgroundColor: '#44587B',
-          color: '#fff'
-        }
+        { color: 'currentColor' },
+        { color: '#fff' }
+      ],
+      {
+        duration: 200,
+        fill: 'forwards',
+        ease: 'ease-in'
+      }
+    )
+
+    const headerBackgroundAnimation = $header.animate(
+      [
+        { backgroundColor: 'transparent' },
+        { backgroundColor: 'var(--brand-color)' }
       ],
       {
         duration: 200,
@@ -131,12 +132,15 @@ export class AppView extends HTMLElement {
     )
 
     await Promise.all([
-      finished(headerAnimation),
+      finished(headerTextAnimation),
+      finished(headerBackgroundAnimation),
       finished(contentAnimation)
     ])
 
     this.hide()
-    $header.style.opacity = ''
+
+    $header.style.backgroundColor = ''
+    $header.style.color = ''
     $content.style.opacity = ''
   }
 }
