@@ -7,18 +7,18 @@
         "targets": {
           "browsers": [
             "last 1 chrome version",
-            "last 1 edge version",
-            "last 1 firefox version",
-            "last 1 opera version",
-            "last 1 safari version",
-            "last 1 ios_saf version"
+            "last 1 firefox version"
           ]
-        }
+        },
+        "exclude": [
+          "transform-regenerator"
+        ]
       }
     ]
   ],
   "plugins": [
     "external-helpers",
-    "remove-comments"
+    "remove-comments",
+    "syntax-async-functions"
   ]
 }

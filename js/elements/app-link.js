@@ -1,7 +1,6 @@
 import { EventName } from '../data/event'
 
 export class AppLink extends HTMLAnchorElement {
-
   constructor () {
     super()
 

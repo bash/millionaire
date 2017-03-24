@@ -1,5 +1,6 @@
 import { EventName } from '../data/event'
 import { routes, templateFile } from '../data/routes'
+import { AppView } from './app-view'
 
 /**
  *
@@ -38,17 +39,23 @@ export class AppRouter extends HTMLElement {
     const resolver = createResolver(this.route)
     const resolved = Promise.resolve(resolver())
 
-    const templateUrl = resolved
-      .then(({ templateName }) => templateFile(templateName))
+    return resolved
+      .then((template) => this._renderView(template))
+  }
 
-    const templateContent = templateUrl
-      .then((template) => fetch(template))
+  /**
+   *
+   * @param {string} templateName
+   * @param {(function())} fetchData
+   * @private
+   */
+  _renderView ({ templateName, fetchData }) {
+    const templateUrl = templateFile(templateName)
+
+    const templateContent = fetch(templateUrl)
       .then((resp) => resp.text())
 
-    const data = resolved
-      .then(({ fetchData }) => {
-        return fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
-      })
+    const data = fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
 
     const html = Promise.all([data, templateContent])
       .then(([data, template]) => {
@@ -56,7 +63,21 @@ export class AppRouter extends HTMLElement {
       })
 
     return html.then((html) => {
-      this.innerHTML = html
+      const view = new AppView(templateName, html)
+
+      this.appendChild(view)
+
+      if (!this._currentView) {
+        view.show()
+        this._currentView = view
+        return
+      }
+
+      this._currentView.transitionInto(view)
+        .then(() => {
+          this.removeChild(this._currentView)
+          this._currentView = view
+        })
     })
   }
 

@@ -8,7 +8,7 @@ JS_FILES := $(shell find js -name "*.js")
 
 .PHONY: all server
 
-all: public/css/app.css public/js/app.js public/js/sw.js
+all: public/css/app.css public/js/app.js
 
 public/css/app.css: $(LESS_FILES)
 	mkdir -p $(@D)

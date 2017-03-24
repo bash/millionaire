@@ -3,6 +3,7 @@ const Session = require('../session/session')
 
 /**
  *
+ * @param {string} cookieName
  * @returns {function(*, (function():Promise))}
  */
 module.exports = (cookieName) => {
