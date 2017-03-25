@@ -1,6 +1,6 @@
 const Application = require('koa')
 const { Pool } = require('pg')
-const { get } = require('koa-route')
+const { get, post } = require('koa-route')
 
 const Repository = require('./repository')
 const redis = require('./middleware/redis')
