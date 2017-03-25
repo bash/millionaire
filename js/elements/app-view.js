@@ -8,8 +8,13 @@ export class AppView extends HTMLElement {
   constructor (templateName, html) {
     super()
 
-    this.templateName = templateName
-    this.innerHTML = html
+    if (templateName) {
+      this.templateName = templateName
+    }
+
+    if (html) {
+      this.innerHTML = html
+    }
 
     this.hide()
   }

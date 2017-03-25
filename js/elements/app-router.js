@@ -35,50 +35,55 @@ export class AppRouter extends HTMLElement {
     this.ownerDocument.defaultView.removeEventListener('popstate', this._onPopState)
   }
 
-  _render () {
+  async _render () {
     const resolver = createResolver(this.route)
-    const resolved = Promise.resolve(resolver())
+    const { templateName, fetchData } = await Promise.resolve(resolver())
+    const templateUrl = templateFile(templateName)
 
-    return resolved
-      .then((template) => this._renderView(template))
+    const [ template, data ] = await this._fetch(templateUrl, fetchData)
+
+    // noinspection ES6ModulesDependencies,NodeModulesDependencies
+    const rendered = Mustache.render(template, data)
+    const view = new AppView(templateName, rendered)
+
+    this.appendChild(view)
+
+    await this._transitionIntoView(view)
+
+    this._currentView = view
   }
 
   /**
    *
-   * @param {string} templateName
-   * @param {(function())} fetchData
+   * @param {AppView} view
+   * @returns {Promise}
    * @private
    */
-  _renderView ({ templateName, fetchData }) {
-    const templateUrl = templateFile(templateName)
+  async _transitionIntoView (view) {
+    if (!this._currentView) {
+      view.show()
+      return
+    }
 
-    const templateContent = fetch(templateUrl)
+    await this._currentView.transitionInto(view)
+
+    this.removeChild(this._currentView)
+  }
+
+  /**
+   *
+   * @param {string} templateUrl
+   * @param {(function():Promise<{}>)} fetchData
+   * @returns {Promise.<string, {}>}
+   * @private
+   */
+  async _fetch (templateUrl, fetchData) {
+    const template = fetch(templateUrl)
       .then((resp) => resp.text())
 
     const data = fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
 
-    const html = Promise.all([data, templateContent])
-      .then(([data, template]) => {
-        return Mustache.render(template, data)
-      })
-
-    return html.then((html) => {
-      const view = new AppView(templateName, html)
-
-      this.appendChild(view)
-
-      if (!this._currentView) {
-        view.show()
-        this._currentView = view
-        return
-      }
-
-      this._currentView.transitionInto(view)
-        .then(() => {
-          this.removeChild(this._currentView)
-          this._currentView = view
-        })
-    })
+    return Promise.all([template, data])
   }
 
   /**
