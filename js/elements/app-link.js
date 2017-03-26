@@ -1,6 +1,6 @@
 import { EventName } from '../data/event'
 
-export class AppLink extends HTMLAnchorElement {
+export class AppLink extends window.HTMLAnchorElement {
   constructor () {
     super()
 
@@ -23,6 +23,6 @@ export class AppLink extends HTMLAnchorElement {
   _onClick (event) {
     event.preventDefault()
 
-    this.dispatchEvent(new CustomEvent(EventName.Route, { bubbles: true, detail: { route: this.pathname } }))
+    this.dispatchEvent(new window.CustomEvent(EventName.Route, { bubbles: true, detail: { route: this.pathname } }))
   }
 }

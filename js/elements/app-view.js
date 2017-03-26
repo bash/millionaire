@@ -4,7 +4,7 @@ const transitions = {
   'landing:register': landingToRegister
 }
 
-export class AppView extends HTMLElement {
+export class AppView extends window.HTMLElement {
   constructor (templateName, html) {
     super()
 

@@ -2,8 +2,8 @@
  *
  * @returns {Promise<{ state: string }>}
  */
-export function fetchGameState() {
-  return fetch('/api/game')
+export function fetchGameState () {
+  return window.fetch('/api/game')
     .then((resp) => resp.json())
 }
 
@@ -11,7 +11,7 @@ export function fetchGameState() {
  *
  * @returns {Promise<Array<{id: number, name: string}>>}
  */
-export function fetchCategories() {
-  return fetch('/api/categories')
+export function fetchCategories () {
+  return window.fetch('/api/categories')
     .then((resp) => resp.json())
 }

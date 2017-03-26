@@ -3,7 +3,7 @@
  * @param {PG} pool
  * @param {(function(Client):(Promise|void))} executor
  */
-function transaction(pool, executor) {
+function transaction (pool, executor) {
   return new Promise((resolve, reject) => {
     pool.connect((err, client, done) => {
       if (err) {
@@ -18,7 +18,6 @@ function transaction(pool, executor) {
     })
   })
 }
-
 
 module.exports = class Repository {
   constructor (pool) {

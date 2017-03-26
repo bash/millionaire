@@ -5,7 +5,7 @@ import { finished } from '../animation'
  * @param {AppView|HTMLElement} landing
  * @param {AppView|HTMLElement} register
  */
-export async function landingToRegister(landing, register) {
+export async function landingToRegister (landing, register) {
   const $title = landing.querySelector('.landing-page > .title')
   const $button = landing.querySelector('.landing-page > .button')
 

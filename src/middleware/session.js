@@ -20,6 +20,6 @@ module.exports = (cookieName) => {
 
     await store.set(sessionId, session.data, session.maxAge)
 
-    ctx.cookies.set(cookieName, sessionId, { maxAge: session.maxAge  })
+    ctx.cookies.set(cookieName, sessionId, { maxAge: session.maxAge })
   }
 }

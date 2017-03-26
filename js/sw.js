@@ -19,7 +19,6 @@ self.addEventListener('activate', (event) => {
 })
 
 self.addEventListener('fetch', (event) => {
-
   const cached = caches.open(STATIC_CACHE)
     .then((cache) => cache.match(event.request))
 

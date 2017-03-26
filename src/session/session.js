@@ -17,12 +17,11 @@ function getRandomBytes (length) {
  *
  * @returns {Promise<string>}
  */
-async function generateSessionId() {
+async function generateSessionId () {
   const buffer = await getRandomBytes(24)
 
   return buffer.toString('hex')
 }
-
 
 /**
  *
@@ -39,7 +38,6 @@ async function getSessionData (store, sessionId) {
 
   return {}
 }
-
 
 module.exports = class Session {
   /**

@@ -9,13 +9,28 @@ import { AppView } from './app-view'
  */
 const createResolver = (path) => {
   if (routes.hasOwnProperty(path)) {
-    return routes[ path ]
+    return routes[path]
   }
 
   return () => '404'
 }
 
-export class AppRouter extends HTMLElement {
+/**
+ *
+ * @param {string} templateUrl
+ * @param {(function():Promise<{}>)} fetchData
+ * @returns {Promise.<string, {}>}
+ */
+const fetchTemplate = (templateUrl, fetchData) => {
+  const template = window.fetch(templateUrl)
+    .then((resp) => resp.text())
+
+  const data = fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
+
+  return Promise.all([template, data])
+}
+
+export class AppRouter extends window.HTMLElement {
   constructor () {
     super()
 
@@ -40,10 +55,10 @@ export class AppRouter extends HTMLElement {
     const { templateName, fetchData } = await Promise.resolve(resolver())
     const templateUrl = templateFile(templateName)
 
-    const [ template, data ] = await this._fetch(templateUrl, fetchData)
+    const [template, data] = await fetchTemplate(templateUrl, fetchData)
 
     // noinspection ES6ModulesDependencies,NodeModulesDependencies
-    const rendered = Mustache.render(template, data)
+    const rendered = window.Mustache.render(template, data)
     const view = new AppView(templateName, rendered)
 
     this.appendChild(view)
@@ -68,22 +83,6 @@ export class AppRouter extends HTMLElement {
     await this._currentView.transitionInto(view)
 
     this.removeChild(this._currentView)
-  }
-
-  /**
-   *
-   * @param {string} templateUrl
-   * @param {(function():Promise<{}>)} fetchData
-   * @returns {Promise.<string, {}>}
-   * @private
-   */
-  async _fetch (templateUrl, fetchData) {
-    const template = fetch(templateUrl)
-      .then((resp) => resp.text())
-
-    const data = fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
-
-    return Promise.all([template, data])
   }
 
   /**

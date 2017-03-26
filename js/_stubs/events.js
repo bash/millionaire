@@ -7,12 +7,9 @@
  @param {CustomEventInit} [eventInitDict]
  @constructor
  */
-function CustomEvent(type, eventInitDict) {}
+window.CustomEvent = function CustomEvent (type, eventInitDict) {}
 
-function Animation () {
-
-}
-
+function Animation () {}
 Animation.prototype = Object.create(EventTarget.prototype)
 
 /**

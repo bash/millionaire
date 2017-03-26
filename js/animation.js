@@ -3,7 +3,7 @@
  * @param {Animation} animation
  * @returns {Promise}
  */
-export function finished(animation) {
+export function finished (animation) {
   if (animation.finished) {
     return animation.finished
   }
