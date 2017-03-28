@@ -1,7 +1,8 @@
 import { landingToRegister } from '../transitions/landing-to-register'
 
 const transitions = {
-  'landing:register': landingToRegister
+  'landing:register': landingToRegister,
+  'landing:question': landingToRegister
 }
 
 export class AppView extends window.HTMLElement {

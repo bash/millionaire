@@ -1,6 +1,6 @@
 /**
  * @typedef {{
- *  method?: string,
+ *  method?: "POST"|"PUT"|"DELETE"|"PATCH",
  *  headers?: Headers|{},
  *  body?: Blob|BufferSource|FormData|URLSearchParams|string,
  *  mode?: "cors"|"no-cors"|"same-origin",

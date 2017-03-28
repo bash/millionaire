@@ -23,15 +23,11 @@ module.exports = class Repository {
    * @returns {Promise<boolean>}
    */
   async hasCategory (categoryId) {
-    try {
-      const result = await this._pool.query('SELECT * FROM mill.category WHERE id = $1::int', [
-        categoryId
-      ])
+    const result = await this._pool.query('SELECT * FROM mill.category WHERE id = $1::bigint', [
+      categoryId
+    ])
 
-      return result.rows.length === 1
-    } catch (e) {
-      return false
-    }
+    return result.rows.length === 1
   }
 
   /**

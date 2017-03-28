@@ -1,3 +1,4 @@
 export const EventName = Object.freeze({
-  Route: 'route'
+  Route: 'route',
+  ReloadRoute: 'reloadRoute'
 })

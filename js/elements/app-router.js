@@ -19,15 +19,16 @@ const createResolver = (path) => {
  *
  * @param {string} templateUrl
  * @param {(function():Promise<{}>)} fetchData
- * @returns {Promise.<string, {}>}
+ * @returns {Promise<{ template: string, data: {} }>}
  */
 const fetchTemplate = (templateUrl, fetchData) => {
   const template = window.fetch(templateUrl)
     .then((resp) => resp.text())
 
-  const data = fetchData ? Promise.resolve(fetchData()) : Promise.resolve({})
+  const data = Promise.resolve(fetchData ? fetchData() : {})
 
   return Promise.all([template, data])
+    .then(([template, data]) => ({ template, data }))
 }
 
 export class AppRouter extends window.HTMLElement {
@@ -35,11 +36,13 @@ export class AppRouter extends window.HTMLElement {
     super()
 
     this._onRoute = this._onRoute.bind(this)
+    this._onReloadRoute = this._onReloadRoute.bind(this)
     this._onPopState = this._onPopState.bind(this)
   }
 
   connectedCallback () {
     this.ownerDocument.addEventListener(EventName.Route, this._onRoute)
+    this.ownerDocument.addEventListener(EventName.ReloadRoute, this._onReloadRoute)
     this.ownerDocument.defaultView.addEventListener('popstate', this._onPopState)
 
     this._setRouteFromPath()
@@ -47,6 +50,7 @@ export class AppRouter extends window.HTMLElement {
 
   disconnectedCallback () {
     this.ownerDocument.addEventListener(EventName.Route, this._onRoute)
+    this.ownerDocument.addEventListener(EventName.ReloadRoute, this._onReloadRoute)
     this.ownerDocument.defaultView.removeEventListener('popstate', this._onPopState)
   }
 
@@ -55,7 +59,7 @@ export class AppRouter extends window.HTMLElement {
     const { templateName, fetchData } = await Promise.resolve(resolver())
     const templateUrl = templateFile(templateName)
 
-    const [template, data] = await fetchTemplate(templateUrl, fetchData)
+    const { template, data } = await fetchTemplate(templateUrl, fetchData)
 
     // noinspection ES6ModulesDependencies,NodeModulesDependencies
     const rendered = window.Mustache.render(template, data)
@@ -94,10 +98,26 @@ export class AppRouter extends window.HTMLElement {
     this.setRoute(event.detail.route, event.detail.replace)
   }
 
+  /**
+   *
+   * @private
+   */
+  _onReloadRoute () {
+    this.setRoute(this.route, true)
+  }
+
+  /**
+   *
+   * @private
+   */
   _onPopState () {
     this._setRouteFromPath()
   }
 
+  /**
+   *
+   * @private
+   */
   _setRouteFromPath () {
     this._route = this.ownerDocument.defaultView.location.pathname
     this._render()

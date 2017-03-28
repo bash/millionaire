@@ -34,7 +34,7 @@ module.exports = function (repository) {
 
     const gameId = await repository.createGame(name, categories)
 
-    ctx.session.data.gameId = gameId
+    ctx.session.gameId = gameId
 
     ctx.body = { 'game_id': gameId }
   }

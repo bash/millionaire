@@ -1,9 +1,28 @@
 /**
  *
+ * @param {Array<string>} params
+ * @returns {URLSearchParams}
+ */
+const buildParams = (...params) => {
+  const result = new window.URLSearchParams()
+
+  params.forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => result.append(`${key}[]`, item))
+    } else {
+      result.append(key, value)
+    }
+  })
+
+  return result
+}
+
+/**
+ *
  * @returns {Promise<{ state: string }>}
  */
 export function fetchGameState () {
-  return window.fetch('/api/game')
+  return window.fetch('/api/game', { credentials: 'include' })
     .then((resp) => resp.json())
 }
 
@@ -12,6 +31,17 @@ export function fetchGameState () {
  * @returns {Promise<Array<{id: number, name: string}>>}
  */
 export function fetchCategories () {
-  return window.fetch('/api/categories')
+  return window.fetch('/api/categories', { credentials: 'include' })
+    .then((resp) => resp.json())
+}
+
+/**
+ *
+ * @param {string} name
+ * @param {Array<string>} categories
+ * @returns {Promise}
+ */
+export function createGame (name, categories) {
+  return window.fetch('/api/games', { method: 'POST', credentials: 'include', body: buildParams(['name', name], ['categories', categories]) })
     .then((resp) => resp.json())
 }

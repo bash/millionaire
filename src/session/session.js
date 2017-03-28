@@ -76,10 +76,18 @@ module.exports = class Session {
 
   /**
    *
-   * @returns {string|null}
+   * @returns {string}
    */
   get gameId () {
     return this.data.gameId
+  }
+
+  /**
+   *
+   * @param {string} value
+   */
+  set gameId (value) {
+    this.data.gameId = value
   }
 
   /**
