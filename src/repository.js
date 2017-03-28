@@ -1,4 +1,7 @@
 const { transaction } = require('./database')
+const moment = require('moment')
+
+const toTimestamp = (date) => moment(date).unix()
 
 module.exports = class Repository {
   constructor (pool) {
@@ -64,8 +67,15 @@ module.exports = class Repository {
   }
 
   async getGameById (gameId) {
-    const result = await this._pool.query('SELECT * FROM mill.game WHERE id = $1::int', [gameId])
+    const result = await this._pool.query('SELECT * FROM mill.game WHERE id = $1::bigint', [gameId])
+    const game = result.rows[0]
 
-    return result.rows[0]
+    return {
+      id: game.id,
+      has_used_joker: game.has_used_joker,
+      player_id: game.player_id,
+      started_at: toTimestamp(game.started_at),
+      ended_at: game.ended_at ? toTimestamp(game.ended_at) : null
+    }
   }
 }

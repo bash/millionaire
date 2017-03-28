@@ -7,6 +7,8 @@ module.exports = function(error) {
     return
   }
 
+  console.log(error)
+
   const props = error.expose ? error.detail : 'Internal Server Error'
   const code = error.expose ? error.statusCode : 500
 
