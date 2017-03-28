@@ -76,6 +76,14 @@ module.exports = class Session {
 
   /**
    *
+   * @returns {string|null}
+   */
+  get gameId () {
+    return this.data.gameId
+  }
+
+  /**
+   *
    * @param {SessionStore} store
    * @param {string} sessionId
    * @returns {string}

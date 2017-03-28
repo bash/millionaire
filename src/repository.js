@@ -1,23 +1,4 @@
-/**
- *
- * @param {PG} pool
- * @param {(function(Client):(Promise|void))} executor
- */
-function transaction (pool, executor) {
-  return new Promise((resolve, reject) => {
-    pool.connect((err, client, done) => {
-      if (err) {
-        return reject(err)
-      }
-
-      const rollback = () => client.query('ROLLBACK', (err) => done(err))
-
-      client.query('BEGIN', (err) => {
-        resolve(err)
-      })
-    })
-  })
-}
+const { transaction } = require('./database')
 
 module.exports = class Repository {
   constructor (pool) {
@@ -31,11 +12,9 @@ module.exports = class Repository {
   async findCategories () {
     const result = await this._pool.query('SELECT * FROM mill.category')
 
-    const categories = result.rows.map(({ id, name }) => {
-      return { id: Number(id), name }
+    return result.rows.map(({ id, name }) => {
+      return { id: id, name }
     })
-
-    return categories
   }
 
   /**
@@ -44,12 +23,53 @@ module.exports = class Repository {
    * @returns {Promise<boolean>}
    */
   async hasCategory (categoryId) {
-    const result = await this._pool.query('SELECT * FROM mill.category WHERE id = $1::int', [
-      categoryId
-    ])
+    try {
+      const result = await this._pool.query('SELECT * FROM mill.category WHERE id = $1::int', [
+        categoryId
+      ])
+
+      return result.rows.length === 1
+    } catch (e) {
+      return false
+    }
   }
 
-  async createGame (name, categories) {
+  /**
+   *
+   * @param {string} name
+   * @param {Array<id>} categories
+   * @returns {Promise<number>}
+   */
+  createGame (name, categories) {
+    return transaction(this._pool, async (client) => {
+      const playerResult = await client.query(
+        'INSERT INTO mill.player(name) VALUES($1::text) RETURNING id',
+        [name]
+      )
 
+      const playerId = playerResult.rows[0].id
+
+      const gameResult = await client.query(
+        'INSERT INTO mill.game(player_id) VALUES($1::bigint) RETURNING id',
+        [playerId]
+      )
+
+      const gameId = gameResult.rows[0].id
+
+      for (let category of categories) {
+        await client.query(
+          'INSERT into mill.game_category(game_id, category_id) VALUES($1::bigint, $2::bigint)',
+          [gameId, category]
+        )
+      }
+
+      return gameId
+    })
+  }
+
+  async getGameById (gameId) {
+    const result = await this._pool.query('SELECT * FROM mill.game WHERE id = $1::int', [gameId])
+
+    return result.rows[0]
   }
 }

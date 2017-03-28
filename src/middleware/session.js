@@ -14,7 +14,7 @@ module.exports = (cookieName) => {
     const sessionId = await Session.determineSessionId(store, cookieValue)
     const session = await Session.loadSession(store, sessionId)
 
-    ctx.state.session = session
+    ctx.session = session
 
     await next()
 
