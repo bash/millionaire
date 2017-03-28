@@ -1,36 +1,21 @@
-const Application = require('koa')
 const { Pool } = require('pg')
-const { get, post } = require('koa-route')
-const bodyParser = require('koa-bodyparser')
-
+const Redis = require('ioredis')
 const Repository = require('./repository')
-const redis = require('./middleware/redis')
-const session = require('./middleware/session')
-const errorHandler = require('./errors/error-handler')
-
-const getGame = require('./handlers/get-game')
-const getCategories = require('./handlers/get-categories')
-const createGame = require('./handlers/create-game')
-
-const app = new Application()
-
-app.context.onerror = errorHandler
+const DataStore = require('./data-store')
+const bootstrapApp = require('./bootstrap/app')
 
 const pool = new Pool({
   user: 'postgres',
-  database: 'postgres'
+  database: 'postgres',
+  max: 3
 })
 
 const repository = new Repository(pool)
 
-app.use(redis())
-app.use(session('session_id'))
-app.use(bodyParser())
+const redis = new Redis()
+const dataStore = new DataStore(redis)
 
-app.use(get('/api/game', getGame(repository)))
-app.use(get('/api/categories', getCategories(repository)))
-app.use(post('/api/games', createGame(repository)))
-
-app.listen(3000, () => {
-  console.log('Listening on :3000')
-})
+bootstrapApp(repository, dataStore)
+  .listen(3000, () => {
+    console.log('Listening on :3000')
+  })

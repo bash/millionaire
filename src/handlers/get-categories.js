@@ -5,6 +5,6 @@
  */
 module.exports = function (repository) {
   return async (ctx) => {
-    ctx.body = await repository.findCategories()
+    ctx.body = await repository.getCategories()
   }
 }

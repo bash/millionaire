@@ -7,15 +7,15 @@ const sessionKey = (sessionId) => `session:${sessionId}`
 module.exports = class SessionStore {
   /**
    *
-   * @param {Redis} redis
+   * @param {DataStore} dataStore
    */
-  constructor (redis) {
+  constructor (dataStore) {
     /**
      *
-     * @type {Redis}
+     * @type {DataStore}
      * @private
      */
-    this._redis = redis
+    this._dataStore = dataStore
   }
 
   /**
@@ -24,7 +24,7 @@ module.exports = class SessionStore {
    * @returns {Promise<boolean>}
    */
   has (sessionId) {
-    return this._redis.exists(sessionKey(sessionId))
+    return this._dataStore.has(sessionKey(sessionId))
   }
 
   /**
@@ -33,7 +33,7 @@ module.exports = class SessionStore {
    * @returns {Promise<{}|null>}
    */
   async get (sessionId) {
-    const rawData = await this._redis.get(sessionKey(sessionId))
+    const rawData = await this._dataStore.get(sessionKey(sessionId))
 
     if (!rawData) {
       return null
@@ -50,9 +50,6 @@ module.exports = class SessionStore {
    * @returns {Promise}
    */
   async set (sessionId, data, maxAge) {
-    const key = sessionKey(sessionId)
-
-    await this._redis.set(key, JSON.stringify(data))
-    await this._redis.expire(key, maxAge)
+    await this._dataStore.set(sessionKey(sessionId), JSON.stringify(data), { maxAge })
   }
 }

@@ -6,6 +6,7 @@
 const buildParams = (...params) => {
   const result = new window.URLSearchParams()
 
+  // TODO: this method is somewhat ugly -> clean up
   params.forEach(([key, value]) => {
     if (Array.isArray(value)) {
       value.forEach((item) => result.append(`${key}[]`, item))
@@ -42,6 +43,17 @@ export function fetchCategories () {
  * @returns {Promise}
  */
 export function createGame (name, categories) {
-  return window.fetch('/api/games', { method: 'POST', credentials: 'include', body: buildParams(['name', name], ['categories', categories]) })
+  const body = buildParams(['name', name], ['categories', categories])
+
+  return window.fetch('/api/games', { method: 'POST', credentials: 'include', body })
+    .then((resp) => resp.json())
+}
+
+/**
+ *
+ * @returns {Promise<{}>}
+ */
+export function fetchCurrentQuestion () {
+  return window.fetch('/api/game/question', { credentials: 'include' })
     .then((resp) => resp.json())
 }

@@ -9,9 +9,10 @@ const NAME_REGEX = /^[\w\-]+$/
 /**
  *
  * @param {Repository} repository
+ * @param {CreateGame} createGame
  * @returns {(function(*):Promise)}
  */
-module.exports = function (repository) {
+module.exports = function (repository, createGame) {
   return async (ctx) => {
     const name = ctx.request.body.name
     const categories = ctx.request.body.categories
@@ -32,7 +33,7 @@ module.exports = function (repository) {
       }
     }
 
-    const gameId = await repository.createGame(name, categories)
+    const gameId = await createGame(name, categories)
 
     ctx.session.gameId = gameId
 

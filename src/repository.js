@@ -1,8 +1,7 @@
 const { transaction } = require('./database')
-const moment = require('moment')
+const { toTimestamp } = require('./helpers/date')
 
-const toTimestamp = (date) => moment(date).unix()
-
+// TODO: should rename to GameRepository, create separate repository for admin
 module.exports = class Repository {
   constructor (pool) {
     this._pool = pool
@@ -12,7 +11,7 @@ module.exports = class Repository {
    *
    * @returns {Promise<Array<{id: number, name: string}>>}
    */
-  async findCategories () {
+  async getCategories () {
     const result = await this._pool.query('SELECT * FROM mill.category')
 
     return result.rows.map(({ id, name }) => {
@@ -37,7 +36,7 @@ module.exports = class Repository {
    *
    * @param {string} name
    * @param {Array<id>} categories
-   * @returns {Promise<number>}
+   * @returns {Promise<string>}
    */
   createGame (name, categories) {
     return transaction(this._pool, async (client) => {
@@ -66,9 +65,18 @@ module.exports = class Repository {
     })
   }
 
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise<{ id: string, has_used_joker: boolean, player_id: string, started_at: number, ended_at: number }>}
+   */
   async getGameById (gameId) {
     const result = await this._pool.query('SELECT * FROM mill.game WHERE id = $1::bigint', [gameId])
     const game = result.rows[0]
+
+    if (!game) {
+      return null
+    }
 
     return {
       id: game.id,
@@ -77,5 +85,41 @@ module.exports = class Repository {
       started_at: toTimestamp(game.started_at),
       ended_at: game.ended_at ? toTimestamp(game.ended_at) : null
     }
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise<Array>}
+   */
+  async getGameQuestions (gameId) {
+    const result = await this._pool.query(
+      'SELECT id FROM mill.game_question WHERE game_id = $1::bigint',
+      [gameId]
+    )
+
+    return result.rows.map(({ id }) => id)
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Promise<{}>}
+   */
+  async getQuestionById (id) {
+    const result = await this._pool.query(
+      `SELECT question.id, question.title, category.name as category
+       FROM mill.question AS question
+       JOIN mill.category AS category ON question.category_id = category.id
+       WHERE question.id = $1::bigint`,
+      [id]
+    )
+
+    const answers = await this._pool.query(
+      `SELECT id, title FROM mill.answer WHERE question_id = $1::bigint`,
+      [id]
+    )
+
+    return Object.assign(result.rows[0], { answers: answers.rows })
   }
 }

@@ -1,4 +1,4 @@
-import { fetchGameState, fetchCategories } from '../fetch'
+import { fetchGameState, fetchCategories, fetchCurrentQuestion } from '../fetch'
 
 const fetchRegisterData = () => {
   return fetchCategories()
@@ -7,9 +7,16 @@ const fetchRegisterData = () => {
     })
 }
 
+const fetchQuestionData = () => {
+  return fetchCurrentQuestion()
+    .then((question) => {
+      return { question }
+    })
+}
+
 const gameTemplates = {
   initial: { templateName: 'register', fetchData: fetchRegisterData },
-  started: { templateName: 'question', fetchData: () => {} }
+  started: { templateName: 'question', fetchData: fetchQuestionData }
 }
 
 const gameResolver = () => {

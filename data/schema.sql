@@ -87,24 +87,11 @@ CREATE UNIQUE INDEX game_category_unique ON mill.game_category (game_id, categor
 CREATE TABLE mill.game_answer (
   id BIGINT PRIMARY KEY DEFAULT mill.next_id(),
   game_id BIGINT NOT NULL REFERENCES mill.game (id) ON DELETE CASCADE,
-  answer_id BIGINT NOT NULL REFERENCES mill.answer (id) ON DELETE CASCADE
+  answer_id BIGINT NOT NULL REFERENCES mill.answer (id) ON DELETE CASCADE,
+  created_at TIMESTAMP NOT NULL DEFAULT mill.utc_now()
 );
 
 CREATE UNIQUE INDEX game_answer_unique ON mill.game_answer (game_id, answer_id);
-
-CREATE OR REPLACE VIEW mill.game_answered_question AS
-  SELECT
-    question.*,
-    answer.id AS answer_id,
-    answer.is_correct,
-    game_answer.game_id AS game_id
-  FROM mill.question AS question
-    JOIN mill.answer
-      AS answer
-      ON question.id = answer.question_id
-    JOIN mill.game_answer
-      AS game_answer
-      ON answer.id = game_answer.answer_id;
 
 -- Todo: optimize this (remove dependency on view game_answered_question)
 CREATE OR REPLACE VIEW mill.game_question AS
@@ -116,10 +103,6 @@ CREATE OR REPLACE VIEW mill.game_question AS
     JOIN mill.game
       AS game
       ON category.game_id = game.id
-    LEFT OUTER JOIN mill.game_answered_question
-      AS answered
-      ON question.id = answered.id AND answered.game_id = game.id
-  WHERE answered.id IS NULL
   GROUP BY question.id, game.id;
 
 -- Todo: this table introduces redundant
