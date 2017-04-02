@@ -6,17 +6,28 @@
 </header>
 
 <section class="page-content">
-    <h1 class="question-title">{{question.title}}</h1>
 
-    <div class="basic-options">
+    <section class="form-group">
 
-        {{#question.answers}}
-            <div class="option">
-                <button class="answer-button">{{title}}</button>
-            </div>
-        {{/question.answers}}
+        <h1 class="question-title">{{question.title}}</h1>
 
-    </div>
+        <div class="basic-options">
+
+            {{#question.answers}}
+                <div class="option">
+                    <button class="answer-button" is="answer-button" answer-id="{{id}}">{{title}}</button>
+                </div>
+            {{/question.answers}}
+
+        </div>
+
+    </section>
+
+    <section class="form-group">
+        <button class="basic-button" is="event-button" trigger-event="joker">50:50</button>
+        <button class="basic-button" is="event-button" trigger-event="collect">Gewinn Realisieren</button>
+    </section>
+
 
 
 </section>

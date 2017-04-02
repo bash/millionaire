@@ -19,15 +19,18 @@
     border-radius: 8px;
     background-color: var(--brand-color);
     color: #fff;
-    opacity: .56;
+    opacity: @idle-opacity;
     transition: opacity .125s;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
     cursor: pointer;
+
+    .user-select(none);
+  }
+
+  > .option > .label:hover {
+    opacity: @hover-opacity;
   }
 
   > .option > input:checked + .label {
-    opacity: 1;
+    opacity: @active-opacity;
   }
 }

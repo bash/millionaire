@@ -19,14 +19,15 @@
     color: var(--brand-color);
     font-size: 24px;
     transition: opacity 125ms;
+    opacity: .7;
   }
 
-  > .button:hover {
+  > .button:hover,
+  > .button:focus {
     opacity: .8;
   }
 
-  > .button:active,
-  > .button:focus {
-    opacity: .9;
+  > .button:active {
+    opacity: 1;
   }
 }
