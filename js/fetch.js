@@ -26,7 +26,7 @@ const buildParams = (...params) => {
  *
  * @returns {Promise<{ state: string }>}
  */
-export function fetchGameState () {
+export function fetchGame () {
   return window.fetch('/api/game', { credentials: 'include' })
     .then((resp) => resp.json())
 }

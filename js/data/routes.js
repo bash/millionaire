@@ -1,41 +1,17 @@
-import { fetchGameState, fetchCategories, fetchCurrentQuestion } from '../fetch'
+import { staticLoader } from '../loaders/static-loader'
+import { gameLoader } from '../loaders/game-loader'
 
-const fetchRegisterData = () => {
-  return fetchCategories()
-    .then((categories) => {
-      return { categories }
-    })
-}
+const defaultRoute = staticLoader('404')
 
-const fetchQuestionData = () => {
-  return fetchCurrentQuestion()
-    .then((question) => {
-      return { question }
-    })
-}
-
-const gameTemplates = {
-  initial: { templateName: 'register', fetchData: fetchRegisterData },
-  started: { templateName: 'question', fetchData: fetchQuestionData }
-}
-
-const gameResolver = () => {
-  const state = fetchGameState()
-    .then((game) => game.state)
-
-  const route = state
-    .then((state) => gameTemplates[state])
-
-  return route
-}
-
-/**
- *
- * @type {{}}
- */
-export const routes = Object.freeze({
-  '/': () => ({ templateName: 'landing', fetchData: () => {} }),
-  '/game': gameResolver
+const routes = Object.freeze({
+  '/': staticLoader('landing'),
+  '/game': gameLoader()
 })
 
-export const templateFile = (name) => `/templates/${name}.html`
+export const resolve = (route) => {
+  if (routes.hasOwnProperty(route)) {
+    return routes[route]
+  }
+
+  return defaultRoute
+}

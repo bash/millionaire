@@ -23,7 +23,7 @@
     </section>
 
     <section class="form-group">
-        <button class="basic-button" is="event-button" event-name="useJoker">50:50</button>
+        <button class="basic-button" is="event-button" event-name="useJoker" {{#game.has_used_joker}}disabled{{/game.has_used_joker}}>50:50</button>
         <button class="basic-button" is="event-button" event-name="collectReward">Gewinn Realisieren</button>
     </section>
 </game-question>

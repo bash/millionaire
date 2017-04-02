@@ -1,35 +1,6 @@
 import { EventName } from '../data/event'
-import { routes, templateFile } from '../data/routes'
+import { resolve } from '../data/routes'
 import { AppView } from './app-view'
-
-/**
- *
- * @param {string} path
- * @returns {(function():(string|Promise<String>))}
- */
-const createResolver = (path) => {
-  if (routes.hasOwnProperty(path)) {
-    return routes[path]
-  }
-
-  return () => '404'
-}
-
-/**
- *
- * @param {string} templateUrl
- * @param {(function():Promise<{}>)} fetchData
- * @returns {Promise<{ template: string, data: {} }>}
- */
-const fetchTemplate = (templateUrl, fetchData) => {
-  const template = window.fetch(templateUrl)
-    .then((resp) => resp.text())
-
-  const data = Promise.resolve(fetchData ? fetchData() : {})
-
-  return Promise.all([template, data])
-    .then(([template, data]) => ({ template, data }))
-}
 
 export class AppRouter extends window.HTMLElement {
   constructor () {
@@ -55,11 +26,8 @@ export class AppRouter extends window.HTMLElement {
   }
 
   async _render () {
-    const resolver = createResolver(this.route)
-    const { templateName, fetchData } = await Promise.resolve(resolver())
-    const templateUrl = templateFile(templateName)
-
-    const { template, data } = await fetchTemplate(templateUrl, fetchData)
+    const loader = resolve(this.route)
+    const { template, templateName, data } = await loader()
 
     // noinspection ES6ModulesDependencies,NodeModulesDependencies
     const rendered = window.Mustache.render(template, data)
