@@ -1,3 +1,7 @@
+const Method = Object.freeze({
+  POST: 'POST'
+})
+
 /**
  *
  * @param {Array<string>} params
@@ -45,7 +49,7 @@ export function fetchCategories () {
 export function createGame (name, categories) {
   const body = buildParams(['name', name], ['categories', categories])
 
-  return window.fetch('/api/games', { method: 'POST', credentials: 'include', body })
+  return window.fetch('/api/games', { method: Method.POST, credentials: 'include', body })
     .then((resp) => resp.json())
 }
 
@@ -55,5 +59,14 @@ export function createGame (name, categories) {
  */
 export function fetchCurrentQuestion () {
   return window.fetch('/api/game/question', { credentials: 'include' })
+    .then((resp) => resp.json())
+}
+
+/**
+ *
+ * @returns {Promise<Array<{}>>}
+ */
+export function useJoker () {
+  return window.fetch('/api/game/joker', { method: Method.POST, credentials: 'include' })
     .then((resp) => resp.json())
 }

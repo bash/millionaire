@@ -5,7 +5,7 @@
   border-radius: 8px;
   background-color: var(--brand-color);
   color: #fff;
-  transition: opacity .125s;
+  transition: opacity .125s, color .125s, transform .5s;
 
   .user-select(none);
 
@@ -16,6 +16,8 @@
 
   &:disabled {
     opacity: @disabled-opacity;
+    transform: rotateX(180deg);
+    color: transparent;
   }
 
   &:enabled:hover,
@@ -23,7 +25,7 @@
     opacity: @hover-opacity;
   }
 
-  &.active {
+  &:enabled.-active {
     opacity: @active-opacity;
   }
 }

@@ -5,8 +5,7 @@
     </div>
 </header>
 
-<section class="page-content">
-
+<game-question class="page-content">
     <section class="form-group">
 
         <h1 class="question-title">{{question.title}}</h1>
@@ -24,10 +23,7 @@
     </section>
 
     <section class="form-group">
-        <button class="basic-button" is="event-button" trigger-event="joker">50:50</button>
-        <button class="basic-button" is="event-button" trigger-event="collect">Gewinn Realisieren</button>
+        <button class="basic-button" is="event-button" event-name="useJoker">50:50</button>
+        <button class="basic-button" is="event-button" event-name="collectReward">Gewinn Realisieren</button>
     </section>
-
-
-
-</section>
+</game-question>
