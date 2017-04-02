@@ -6,6 +6,16 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <title>Wer wird Millionär?</title>
 
+    <script>
+      (() => {
+        const color = window.localStorage.getItem('color')
+
+        if (color) {
+          document.documentElement.style.setProperty('--brand-color', color, '')
+        }
+      })()
+    </script>
+
     <link rel="stylesheet" href="/css/app.css"/>
 </head>
 <body>

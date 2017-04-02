@@ -8,6 +8,11 @@ const routes = Object.freeze({
   '/game': gameLoader()
 })
 
+/**
+ *
+ * @param route
+ * @returns {(function():Promise<{ templateName: string, template: string, data: {} }>)}
+ */
 export const resolve = (route) => {
   if (routes.hasOwnProperty(route)) {
     return routes[route]

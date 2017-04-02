@@ -22,7 +22,7 @@ const gameTemplates = {
 
 /**
  *
- * @returns {(function():{})}
+ * @returns {function():Promise<{ templateName: string, template: string, data: {} }>}
  */
 export function gameLoader () {
   return () => {
