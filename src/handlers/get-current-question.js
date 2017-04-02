@@ -1,3 +1,5 @@
+const HttpError = require('../errors/http-error')
+
 /**
  *
  * @param {GetCurrentQuestion} getCurrentQuestion
@@ -5,6 +7,12 @@
  */
 module.exports = function (getCurrentQuestion) {
   return async (ctx) => {
-    ctx.body = await getCurrentQuestion(ctx.session.gameId)
+    const question = await getCurrentQuestion(ctx.session.gameId)
+
+    if (!question) {
+      throw new HttpError(404, { error: 'no question found' })
+    }
+
+    ctx.body = question
   }
 }

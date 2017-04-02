@@ -9,9 +9,11 @@ const getGame = require('../handlers/get-game')
 const getCategories = require('../handlers/get-categories')
 const createGame = require('../handlers/create-game')
 const getCurrentQuestion = require('../handlers/get-current-question')
+const useJoker = require('../handlers/use-joker')
 
-const createGameCommand = require('../commands/create-game')
-const getCurrentQuestionQuery = require('../queries/get-current-question')
+const _createGameCommand = require('../commands/create-game')
+const _getCurrentQuestionQuery = require('../queries/get-current-question')
+const { useJoker: _useJokerCommand } = require('../commands/use-joker')
 
 /**
  *
@@ -20,6 +22,10 @@ const getCurrentQuestionQuery = require('../queries/get-current-question')
  * @returns {Application}
  */
 module.exports = function bootstrapApp (repository, dataStore) {
+  const createGameCommand = _createGameCommand(repository, dataStore)
+  const getCurrentQuestionQuery = _getCurrentQuestionQuery(repository, dataStore)
+  const useJokerCommand = _useJokerCommand(repository, dataStore)
+
   const app = new Application()
 
   app.context.onerror = errorHandler
@@ -29,8 +35,9 @@ module.exports = function bootstrapApp (repository, dataStore) {
 
   app.use(get('/api/game', getGame(repository)))
   app.use(get('/api/categories', getCategories(repository)))
-  app.use(post('/api/games', createGame(repository, createGameCommand(repository, dataStore))))
-  app.use(get('/api/game/question', getCurrentQuestion(getCurrentQuestionQuery(repository, dataStore))))
+  app.use(post('/api/games', createGame(repository, createGameCommand)))
+  app.use(get('/api/game/question', getCurrentQuestion(getCurrentQuestionQuery)))
+  app.use(post('/api/game/joker', useJoker(useJokerCommand)))
 
   return app
 }

@@ -67,6 +67,18 @@ module.exports = class Repository {
 
   /**
    *
+   * @param {} gameId
+   * @returns {Promise<boolean>}
+   */
+  async hasGame (gameId) {
+    const result = await this._pool.query('SELECT * FROM mill.game WHERE id = $1::bigint', [gameId])
+    const game = result.rows[0]
+
+    return (game != null)
+  }
+
+  /**
+   *
    * @param {string} gameId
    * @returns {Promise<{ id: string, has_used_joker: boolean, player_id: string, started_at: number, ended_at: number }>}
    */
@@ -85,6 +97,22 @@ module.exports = class Repository {
       started_at: toTimestamp(game.started_at),
       ended_at: game.ended_at ? toTimestamp(game.ended_at) : null
     }
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise<boolean>}
+   */
+  async hasUsedJoker (gameId) {
+    const result = await this._pool.query('SELECT has_used_joker FROM mill.game WHERE id = $1::bigint', [gameId])
+    const game = result.rows[0]
+
+    if (!game) {
+      return false
+    }
+
+    return game.has_used_joker
   }
 
   /**
@@ -115,11 +143,45 @@ module.exports = class Repository {
       [id]
     )
 
+    const question = result.rows[0]
+
+    if (!question) {
+      return null
+    }
+
     const answers = await this._pool.query(
       `SELECT id, title FROM mill.answer WHERE question_id = $1::bigint`,
       [id]
     )
 
-    return Object.assign(result.rows[0], { answers: answers.rows })
+    return Object.assign(question, { answers: answers.rows })
+  }
+
+  /**
+   *
+   * @param {string} questionId
+   * @returns {Promise.<Array<{}>>}
+   */
+  async getIncorrectAnswers (questionId) {
+    const result = await this._pool.query(
+      `SELECT id, title FROM mill.answer
+       WHERE question_id = $1::bigint
+       AND is_correct = FALSE`,
+      [questionId]
+    )
+
+    return result.rows
+  }
+
+  /**
+   *
+   * @param gameId
+   * @returns {Promise}
+   */
+  async setUsedJoker (gameId) {
+    return await this._pool.query(
+      `UPDATE mill.game SET has_used_joker = TRUE WHERE id = $1::bigint`,
+      [gameId]
+    )
   }
 }
