@@ -70,3 +70,17 @@ export function useJoker () {
   return window.fetch('/api/game/joker', { method: Method.POST, credentials: 'include' })
     .then((resp) => resp.json())
 }
+
+/**
+ *
+ * @returns {Promise<Array<{}>>}
+ */
+export function answerQuestion (answerId) {
+  const body = buildParams(['answer_id', answerId])
+
+  return window.fetch('/api/game/answer', { method: Method.POST, credentials: 'include', body })
+    .then((resp) => resp.json())
+    .then(({ is_correct }) => {
+      return { isCorrect: is_correct }
+    })
+}

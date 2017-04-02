@@ -7,10 +7,14 @@ module.exports = function(error) {
     return
   }
 
-  console.log(error)
+  const { expose } = error
 
-  const props = error.expose ? error.detail : 'Internal Server Error'
-  const code = error.expose ? error.statusCode : 500
+  if (!expose) {
+    console.log(error)
+  }
+
+  const props = expose ? error.detail : 'Internal Server Error'
+  const code = expose ? error.statusCode : 500
 
   const body = JSON.stringify(props)
 

@@ -1,6 +1,6 @@
 import { EventName } from '../data/event'
 import { AnswerButton } from './answer-button'
-import { useJoker } from '../fetch'
+import { answerQuestion, useJoker } from '../fetch'
 
 export class GameQuestion extends HTMLElement {
   constructor () {
@@ -23,13 +23,17 @@ export class GameQuestion extends HTMLElement {
     this.removeEventListener(EventName.CollectReward, this._onCollectReward)
   }
 
-  _onSelectAnswer (event) {
+  async _onSelectAnswer (event) {
     const answerId = event.detail.answerId
     const button = event.target
 
     button.setActive()
 
-    console.log(`selected answer ${answerId}`)
+    const { isCorrect } = await answerQuestion(answerId)
+
+    console.log(isCorrect)
+
+    this.dispatchEvent(new CustomEvent(EventName.ReloadRoute, { bubbles: true }))
   }
 
   async _onUseJoker (event) {

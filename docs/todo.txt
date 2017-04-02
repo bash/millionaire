@@ -1,1 +1,2 @@
 [] Show errors in register form
+[] clean up after game ends

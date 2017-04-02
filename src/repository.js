@@ -160,7 +160,7 @@ module.exports = class Repository {
   /**
    *
    * @param {string} questionId
-   * @returns {Promise.<Array<{}>>}
+   * @returns {Promise<Array<{}>>}
    */
   async getIncorrectAnswers (questionId) {
     const result = await this._pool.query(
@@ -171,6 +171,21 @@ module.exports = class Repository {
     )
 
     return result.rows
+  }
+
+  /**
+   *
+   * @param {string} answerId
+   * @returns {Promise<{}>}
+   */
+  async getAnswer (answerId) {
+    const result = await this._pool.query(
+      `SELECT question_id, is_correct FROM mill.answer
+       WHERE id = $1::bigint`,
+      [answerId]
+    )
+
+    return result.rows[0]
   }
 
   /**

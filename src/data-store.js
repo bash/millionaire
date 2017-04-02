@@ -58,4 +58,12 @@ module.exports = class DataStore {
   getCurrentQuestion (gameId) {
     return this._redis.lindex(`game_questions:${gameId}`, 0)
   }
+
+  /**
+   *
+   * @returns {Promise}
+   */
+  removeCurrentQuestion (gameId) {
+    return this._redis.lpop(`game_questions:${gameId}`)
+  }
 }
