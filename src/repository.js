@@ -67,7 +67,7 @@ module.exports = class Repository {
 
   /**
    *
-   * @param {} gameId
+   * @param {string} gameId
    * @returns {Promise<boolean>}
    */
   async hasGame (gameId) {
@@ -190,13 +190,53 @@ module.exports = class Repository {
 
   /**
    *
-   * @param gameId
+   * @param {string} gameId
    * @returns {Promise}
    */
   async setUsedJoker (gameId) {
     return await this._pool.query(
-      `UPDATE mill.game SET has_used_joker = TRUE WHERE id = $1::bigint`,
+      'UPDATE mill.game SET has_used_joker = TRUE WHERE id = $1::bigint',
       [gameId]
+    )
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise}
+   */
+  async setEndedAt (gameId) {
+    return await this._pool.query(
+      'UPDATE mill.game SET ended_at = mill.utc_now() WHERE id = $1::bigint',
+      [gameId]
+    )
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise<number>}
+   */
+  async getGameDuration (gameId) {
+    const result = await this._pool.query(
+      'SELECT extract(epoch from (ended_at::timestamp - started_at::timestamp)) as duration FROM mill.game WHERE id = $1::bigint',
+      [gameId]
+    )
+
+    return result.rows[0].duration
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @param {number} score
+   * @param {number} weightedScore
+   * @returns {Promise}
+   */
+  writeScore (gameId, score, weightedScore) {
+    return this._pool.query(
+      'INSERT INTO mill.score (game_id, score, weighted_score) VALUES ($1::bigint, $2::int, $3::double precision)',
+      [gameId, score, weightedScore]
     )
   }
 }

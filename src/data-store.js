@@ -1,3 +1,6 @@
+const gameQuestions = (gameId) => `game:${gameId}:questions`
+const gameScore = (gameId) => `game:${gameId}:score`
+
 module.exports = class DataStore {
   /**
    *
@@ -47,7 +50,7 @@ module.exports = class DataStore {
    * @returns {Promise}
    */
   setGameQuestions (gameId, questions) {
-    return this._redis.rpush(`game_questions:${gameId}`, ...questions)
+    return this._redis.rpush(gameQuestions(gameId), ...questions)
   }
 
   /**
@@ -56,7 +59,7 @@ module.exports = class DataStore {
    * @returns {Promise<string>}
    */
   getCurrentQuestion (gameId) {
-    return this._redis.lindex(`game_questions:${gameId}`, 0)
+    return this._redis.lindex(gameQuestions(gameId), 0)
   }
 
   /**
@@ -64,6 +67,45 @@ module.exports = class DataStore {
    * @returns {Promise}
    */
   removeCurrentQuestion (gameId) {
-    return this._redis.lpop(`game_questions:${gameId}`)
+    return this._redis.lpop(gameQuestions(gameId))
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise}
+   */
+  incrementScore (gameId) {
+    // TODO: mayday! mayday! we have a magic number!
+    return this._redis.incrby(gameScore(gameId), 30)
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise}
+   */
+  clearScore (gameId) {
+    return this._redis.del(gameScore(gameId))
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @returns {Promise<number>}
+   */
+  async getScore (gameId) {
+    return Number.parseInt(await this._redis.get(gameScore(gameId))) || 0
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   */
+  deleteGameData (gameId) {
+    return this._redis.del(
+      gameScore(gameId),
+      gameQuestions(gameId)
+    )
   }
 }

@@ -90,6 +90,10 @@ module.exports = class Session {
     this.data.gameId = value
   }
 
+  removeGameId () {
+    delete this._data.gameId
+  }
+
   /**
    *
    * @param {SessionStore} store
