@@ -1,22 +1,50 @@
 import { staticLoader } from '../loaders/static-loader'
 import { gameLoader } from '../loaders/game-loader'
-
-const defaultRoute = staticLoader('404')
-
-const routes = Object.freeze({
-  '/': staticLoader('landing'),
-  '/game': gameLoader()
-})
+import { Route } from '../routing/route'
 
 /**
  *
- * @param route
- * @returns {(function():Promise<{ templateName: string, template: string, data: {} }>)}
+ * @typedef {(function(params: {}):Promise<{ templateName: string, template: string, data: {} }>)} Loader
  */
-export const resolve = (route) => {
-  if (routes.hasOwnProperty(route)) {
-    return routes[route]
+
+/**
+ *
+ * @type {Loader}
+ */
+const defaultRoute = staticLoader('404')
+
+/**
+ *
+ * @type {[{route: Route, loader: Loader}]}
+ */
+const routes = [
+  {
+    route: new Route('/'),
+    loader: staticLoader('landing'),
+  },
+  {
+    route: new Route('/game'),
+    loader: gameLoader()
+  },
+  {
+    route: new Route('/score/@gameId'),
+    loader: staticLoader('score')
+  }
+]
+
+/**
+ *
+ * @param {string} path
+ * @returns {(function():Promise<{ templateName: string, template: string, data: {}}>)}
+ */
+export const resolve = (path) => {
+  const result = routes.find(({ route }) => route.test(path))
+
+  if (!result) {
+    return defaultRoute.bind(null)
   }
 
-  return defaultRoute
+  const { route, loader } = result
+
+  return loader.bind(null, route.params(path))
 }

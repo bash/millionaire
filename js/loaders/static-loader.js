@@ -3,13 +3,13 @@ import { fetchTemplate } from '../data/template'
 /**
  *
  * @param {string} templateName
- * @returns {function():Promise<{ templateName: string, template: string, data: {} }>}
+ * @returns {Loader}
  */
 export function staticLoader (templateName) {
-  return () => {
+  return (params) => {
     return fetchTemplate(templateName)
       .then((template) => {
-        return { templateName, template, data: {} }
+        return { templateName, template, data: { params } }
       })
   }
 }
