@@ -6,7 +6,7 @@ ROLLUP := rollup -c .rollup.config.js
 LESS_FILES := $(shell find less -name "*.less")
 JS_FILES := $(shell find js -name "*.js")
 
-.PHONY: all server
+.PHONY: all
 
 all: public/css/app.css public/js/app.js
 
