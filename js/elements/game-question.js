@@ -1,6 +1,7 @@
 import { EventName } from '../data/event'
 import { AnswerButton } from './answer-button'
 import { answerQuestion, useJoker } from '../fetch'
+import { gameScore } from '../data/routes'
 
 export class GameQuestion extends HTMLElement {
   constructor () {
@@ -29,11 +30,13 @@ export class GameQuestion extends HTMLElement {
 
     button.setActive()
 
-    const { isCorrect } = await answerQuestion(answerId)
+    const { isFinished } = await answerQuestion(answerId)
 
-    console.log(isCorrect)
-
-    this.dispatchEvent(new CustomEvent(EventName.ReloadRoute, { bubbles: true }))
+    if (isFinished) {
+      this._finishGame()
+    } else {
+      this.dispatchEvent(new CustomEvent(EventName.ReloadRoute, { bubbles: true }))
+    }
   }
 
   async _onUseJoker (event) {
@@ -49,7 +52,19 @@ export class GameQuestion extends HTMLElement {
       })
   }
 
+  _finishGame () {
+    this.dispatchEvent(new CustomEvent(EventName.Route, { bubbles: true, detail: { route: gameScore(this.gameId) } }))
+  }
+
   _onCollectReward () {
 
+  }
+
+  /**
+   *
+   * @returns {string}
+   */
+  get gameId () {
+    return this.getAttribute('game-id')
   }
 }

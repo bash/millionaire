@@ -4,3 +4,16 @@
         <a href="/" is="app-link">Wer wird Millionär?</a>
     </div>
 </header>
+
+<div class="page-content">
+    <h1>
+        {{#game.has_won}}
+            Gratulation du hast {{game.score}} Punkte gewonnen!
+        {{/game.has_won}}
+
+        {{^game.has_won}}
+            Leider keine Punkte
+        {{/game.has_won}}
+    </h1>
+</div>
+

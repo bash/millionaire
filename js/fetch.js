@@ -26,7 +26,7 @@ const buildParams = (...params) => {
  *
  * @returns {Promise<{ state: string }>}
  */
-export function fetchGame () {
+export function fetchCurrentGame () {
   return window.fetch('/api/game', { credentials: 'include' })
     .then((resp) => resp.json())
 }
@@ -80,7 +80,16 @@ export function answerQuestion (answerId) {
 
   return window.fetch('/api/game/answer', { method: Method.POST, credentials: 'include', body })
     .then((resp) => resp.json())
-    .then(({ is_correct }) => {
-      return { isCorrect: is_correct }
+    .then(({ is_correct, is_finished }) => {
+      return { isCorrect: is_correct, isFinished: is_finished }
     })
+}
+
+/**
+ *
+ * @param {string} gameId
+ */
+export function fetchGame (gameId) {
+  return window.fetch(`/api/games/${encodeURIComponent(gameId)}`, { credentials: 'include' })
+    .then((resp) => resp.json())
 }

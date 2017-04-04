@@ -1,5 +1,5 @@
 import { fetchTemplate } from '../data/template'
-import { fetchCategories, fetchCurrentQuestion, fetchGame } from '../fetch'
+import { fetchCategories, fetchCurrentQuestion, fetchCurrentGame } from '../fetch'
 
 const fetchRegisterData = () => {
   return fetchCategories()
@@ -26,7 +26,7 @@ const gameTemplates = {
  */
 export function gameLoader () {
   return () => {
-    const game = fetchGame()
+    const game = fetchCurrentGame()
     const state = game.then(({ state }) => state)
 
     const route = state

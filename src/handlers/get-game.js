@@ -1,17 +1,17 @@
+const HttpError = require('../errors/http-error')
+
 /**
  *
  * @returns {function(*)}
  */
-module.exports = function (repository, dataStore) {
-  return async (ctx) => {
-    const gameId = ctx.session.gameId
+module.exports = function (repository) {
+  return async (ctx, gameId) => {
     const game = await repository.getGameById(gameId)
-    const score = await dataStore.getScore(gameId)
 
-    if (game) {
-      ctx.body = Object.assign({ state: 'started', score }, game)
-    } else {
-      ctx.body = { state: 'initial' }
+    if (!game) {
+      throw new HttpError(404, { error: 'game not found' })
     }
+
+    ctx.body = game
   }
 }

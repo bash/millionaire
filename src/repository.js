@@ -80,10 +80,15 @@ module.exports = class Repository {
   /**
    *
    * @param {string} gameId
-   * @returns {Promise<{ id: string, has_used_joker: boolean, player_id: string, started_at: number, ended_at: number }>}
+   * @returns {Promise<{}>}
    */
   async getGameById (gameId) {
-    const result = await this._pool.query('SELECT * FROM mill.game WHERE id = $1::bigint', [gameId])
+    const result = await this._pool.query(
+      `SELECT game.*, score.score, score.weighted_score FROM mill.game AS game
+       LEFT OUTER JOIN mill.score AS score ON score.game_id = game.id
+       WHERE game.id = $1::bigint`,
+      [gameId]
+    )
     const game = result.rows[0]
 
     if (!game) {
@@ -95,7 +100,10 @@ module.exports = class Repository {
       has_used_joker: game.has_used_joker,
       player_id: game.player_id,
       started_at: toTimestamp(game.started_at),
-      ended_at: game.ended_at ? toTimestamp(game.ended_at) : null
+      ended_at: game.ended_at ? toTimestamp(game.ended_at) : null,
+      score: Number(game.score) || 0,
+      weighted_score: Number(game.weighted_score) || 0,
+      has_won: (Number(game.score) > 0)
     }
   }
 

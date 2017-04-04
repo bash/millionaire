@@ -1,6 +1,9 @@
 import { staticLoader } from '../loaders/static-loader'
 import { gameLoader } from '../loaders/game-loader'
 import { Route } from '../routing/route'
+import { scoreLoader } from '../loaders/score-loader'
+
+export const gameScore = (gameId) => `/score/${gameId}`
 
 /**
  *
@@ -28,7 +31,7 @@ const routes = [
   },
   {
     route: new Route('/score/@gameId'),
-    loader: staticLoader('score')
+    loader: scoreLoader()
   }
 ]
 
