@@ -9,6 +9,8 @@
  */
 window.CustomEvent = function CustomEvent (type, eventInitDict) {}
 
+window.CustomEvent.prototype = Object.create(Event.prototype)
+
 function Animation () {}
 Animation.prototype = Object.create(EventTarget.prototype)
 

@@ -104,7 +104,7 @@ export class AppRouter extends window.HTMLElement {
    * @param {string} value
    * @param {boolean} replace
    */
-  setRoute (value, replace = false) {
+  async setRoute (value, replace = false) {
     this._route = value
 
     if (replace) {
@@ -113,6 +113,6 @@ export class AppRouter extends window.HTMLElement {
       this.ownerDocument.defaultView.history.pushState(null, '', value)
     }
 
-    this._render()
+    await this._render()
   }
 }
