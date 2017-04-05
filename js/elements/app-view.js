@@ -2,7 +2,8 @@ import { landingToRegister } from '../transitions/landing-to-register'
 
 const transitions = {
   'landing:register': landingToRegister,
-  'landing:question': landingToRegister
+  'landing:question': landingToRegister,
+  'landing:score': landingToRegister
 }
 
 export class AppView extends window.HTMLElement {
@@ -49,13 +50,16 @@ export class AppView extends window.HTMLElement {
    * @param {AppView} view
    */
   async transitionInto (view) {
-    const transition = transitions[ `${this.templateName}:${view.templateName}` ]
+    const transition = transitions[`${this.templateName}:${view.templateName}`]
 
     if (transition) {
-      return transition(this, view)
+      await transition(this, view)
+    } else {
+      this.hide()
+      view.show()
     }
 
-    this.hide()
-    view.show()
+    // TODO: verify if this is a good idea
+    window.scrollTo(0, 0)
   }
 }

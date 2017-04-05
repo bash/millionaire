@@ -14,5 +14,7 @@ module.exports = function (repository, dataStore) {
     await repository.writeScore(gameId, score, weightedScore)
 
     await dataStore.deleteGameData(gameId)
+
+    return { duration, score, weightedScore }
   }
 }

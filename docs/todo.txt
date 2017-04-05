@@ -1,2 +1,3 @@
 [] Show errors in register form
-[] clean up after game ends
+[] Show more details on game info page
+[] Color picker

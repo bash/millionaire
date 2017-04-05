@@ -7,19 +7,15 @@
 
 <game-question class="page-content" game-id="{{game.id}}">
     <section class="form-group">
-
         <h1 class="question-title">{{question.title}}</h1>
 
         <div class="basic-options">
-
             {{#question.answers}}
                 <div class="option">
                     <button class="answer-button" is="answer-button" answer-id="{{id}}">{{title}}</button>
                 </div>
             {{/question.answers}}
-
         </div>
-
     </section>
 
     <section class="form-group">

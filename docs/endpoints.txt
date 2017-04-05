@@ -18,10 +18,10 @@ DELETE			-> /scores/:id
 
 
 
-POST 			-> /games
+[x] POST 			-> /games
 
-GET				-> /game
-GET				-> /game/question
-POST			-> /game/joker
-POST			-> /game/answer
-POST			-> /game/collect
+[x] GET				-> /game
+[x] GET				-> /game/question
+[x] POST		    -> /game/joker
+[x] POST			-> /game/answer
+[ ] POST			-> /game/finish

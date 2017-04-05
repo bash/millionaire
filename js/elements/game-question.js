@@ -1,6 +1,6 @@
 import { EventName } from '../data/event'
 import { AnswerButton } from './answer-button'
-import { answerQuestion, useJoker } from '../fetch'
+import { answerQuestion, useJoker, finishGame } from '../fetch'
 import { gameScore } from '../data/routes'
 
 export class GameQuestion extends HTMLElement {
@@ -57,7 +57,8 @@ export class GameQuestion extends HTMLElement {
   }
 
   _onCollectReward () {
-
+    finishGame()
+      .then(() => this._finishGame())
   }
 
   /**

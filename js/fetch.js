@@ -73,6 +73,7 @@ export function useJoker () {
 
 /**
  *
+ * @param {string} answerId
  * @returns {Promise<Array<{}>>}
  */
 export function answerQuestion (answerId) {
@@ -83,6 +84,15 @@ export function answerQuestion (answerId) {
     .then(({ is_correct, is_finished }) => {
       return { isCorrect: is_correct, isFinished: is_finished }
     })
+}
+
+/**
+ *
+ * @returns {Promise}
+ */
+export function finishGame () {
+  return window.fetch(`/api/game/finish`, { method: Method.POST, credentials: 'include' })
+    .then((resp) => resp.json())
 }
 
 /**

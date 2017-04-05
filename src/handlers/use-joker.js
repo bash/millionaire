@@ -1,4 +1,4 @@
-const HttpError = require('../errors/http-error')
+const HttpError = require('../http/http-error')
 const { JokerError } = require('../commands/use-joker')
 
 const convertError = (error) => {
