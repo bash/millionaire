@@ -1,0 +1,8 @@
+[Unit]
+Description=Millionaire
+# After=postgres.service redis.service
+# Requires=postgres.service redis.service
+
+[Service]
+Restart=always
+ExecStart=/usr/local/bin/node /usr/src/millionaire/src/index.js
