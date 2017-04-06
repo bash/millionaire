@@ -17,11 +17,11 @@ module.exports.transaction = function transaction (pool, executor) {
 
         const result = executor(client)
 
-        result
+        const committed = result
           .then(commit)
           .catch(rollback)
 
-        resolve(result)
+        committed.then(() => resolve(result))
       })
     })
   })

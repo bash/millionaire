@@ -7,7 +7,7 @@ const bootstrapApp = require('./bootstrap/app')
 const pool = new Pool({
   user: 'postgres',
   database: 'postgres',
-  max: 3
+  max: 4
 })
 
 const repository = new Repository(pool)
