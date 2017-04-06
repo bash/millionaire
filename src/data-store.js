@@ -1,111 +1,44 @@
-const gameQuestions = (gameId) => `game:${gameId}:questions`
-const gameScore = (gameId) => `game:${gameId}:score`
-
-module.exports = class DataStore {
-  /**
-   *
-   * @param {Redis} redis
-   */
-  constructor (redis) {
-    this._redis = redis
-  }
-
-  /**
-   *
-   * @param {string} key
-   * @returns {Promise.<boolean>}
-   */
-  has (key) {
-    return this._redis.exists(key)
-  }
-
-  /**
-   *
-   * @param {string} key
-   * @returns {Promise<string>}
-   */
-  get (key) {
-    return this._redis.get(key)
-  }
-
-  /**
-   *
-   * @param {string} key
-   * @param {*} value
-   * @param {number} [maxAge]
-   * @returns {Promise}
-   */
-  async set (key, value, { maxAge } = {}) {
-    await this._redis.set(key, value)
-
-    if (maxAge) {
-      await this._redis.expire(key, maxAge)
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const gameQuestions = (gameId) => `game:${gameId}:questions`;
+const gameScore = (gameId) => `game:${gameId}:score`;
+class DataStore {
+    constructor(redis) {
+        this._redis = redis;
     }
-  }
-
-  /**
-   *
-   * @param {string} gameId
-   * @param {Array<string>} questions
-   * @returns {Promise}
-   */
-  setGameQuestions (gameId, questions) {
-    return this._redis.rpush(gameQuestions(gameId), ...questions)
-  }
-
-  /**
-   *
-   * @param {string} gameId
-   * @returns {Promise<string>}
-   */
-  getCurrentQuestion (gameId) {
-    return this._redis.lindex(gameQuestions(gameId), 0)
-  }
-
-  /**
-   *
-   * @returns {Promise}
-   */
-  removeCurrentQuestion (gameId) {
-    return this._redis.lpop(gameQuestions(gameId))
-  }
-
-  /**
-   *
-   * @param {string} gameId
-   * @returns {Promise}
-   */
-  incrementScore (gameId) {
-    // TODO: mayday! mayday! we have a magic number!
-    return this._redis.incrby(gameScore(gameId), 30)
-  }
-
-  /**
-   *
-   * @param {string} gameId
-   * @returns {Promise}
-   */
-  clearScore (gameId) {
-    return this._redis.del(gameScore(gameId))
-  }
-
-  /**
-   *
-   * @param {string} gameId
-   * @returns {Promise<number>}
-   */
-  async getScore (gameId) {
-    return Number.parseInt(await this._redis.get(gameScore(gameId))) || 0
-  }
-
-  /**
-   *
-   * @param {string} gameId
-   */
-  deleteGameData (gameId) {
-    return this._redis.del(
-      gameScore(gameId),
-      gameQuestions(gameId)
-    )
-  }
+    has(key) {
+        return this._redis.exists(key);
+    }
+    get(key) {
+        return this._redis.get(key);
+    }
+    async set(key, value, { maxAge } = {}) {
+        await this._redis.set(key, value);
+        if (maxAge) {
+            await this._redis.expire(key, maxAge);
+        }
+    }
+    setGameQuestions(gameId, questions) {
+        return this._redis.rpush(gameQuestions(gameId), ...questions);
+    }
+    getCurrentQuestion(gameId) {
+        return this._redis.lindex(gameQuestions(gameId), 0);
+    }
+    removeCurrentQuestion(gameId) {
+        return this._redis.lpop(gameQuestions(gameId));
+    }
+    incrementScore(gameId) {
+        return this._redis.incrby(gameScore(gameId), 30);
+    }
+    clearScore(gameId) {
+        return this._redis.del(gameScore(gameId));
+    }
+    async getScore(gameId) {
+        return Number.parseInt(await this._redis.get(gameScore(gameId))) || 0;
+    }
+    deleteGameData(gameId) {
+        return this._redis.del(gameScore(gameId), gameQuestions(gameId));
+    }
 }
+exports.DataStore = DataStore;
+//# sourceMappingURL=data-store.js.map

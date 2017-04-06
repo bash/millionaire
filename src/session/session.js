@@ -1,126 +1,60 @@
-const crypto = require('crypto')
-
-/**
- *
- * @param {number} length
- * @returns {Promise<Buffer>}
- */
-function getRandomBytes (length) {
-  return new Promise((resolve, reject) => {
-    crypto.randomBytes(length, (err, buf) => {
-      err ? reject(err) : resolve(buf)
-    })
-  })
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const crypto = require("crypto");
+function getRandomBytes(length) {
+    return new Promise((resolve, reject) => {
+        crypto.randomBytes(length, (err, buf) => {
+            err ? reject(err) : resolve(buf);
+        });
+    });
 }
-
-/**
- *
- * @returns {Promise<string>}
- */
-async function generateSessionId () {
-  const buffer = await getRandomBytes(24)
-
-  return buffer.toString('hex')
+async function generateSessionId() {
+    const buffer = await getRandomBytes(24);
+    return buffer.toString('hex');
 }
-
-/**
- *
- * @param {string} sessionId
- * @param {SessionStore} store
- * @returns {Promise<{}>}
- */
-async function getSessionData (store, sessionId) {
-  const data = await store.get(sessionId)
-
-  if (data) {
-    return data
-  }
-
-  return {}
-}
-
-module.exports = class Session {
-  /**
-   *
-   * @param {string} sessionId
-   * @param {{}} data
-   */
-  constructor (sessionId, data) {
-    this._id = sessionId
-    this._data = data
-  }
-
-  /**
-   *
-   * @returns {string}
-   */
-  get id () {
-    return this._id
-  }
-
-  /**
-   *
-   * @returns {number}
-   */
-  get maxAge () {
-    return 30 * 24 * 3600 * 1000
-  }
-
-  /**
-   *
-   * @returns {{}}
-   */
-  get data () {
-    return this._data
-  }
-
-  /**
-   *
-   * @returns {string}
-   */
-  get gameId () {
-    return this.data.gameId
-  }
-
-  /**
-   *
-   * @param {string} value
-   */
-  set gameId (value) {
-    this.data.gameId = value
-  }
-
-  removeGameId () {
-    delete this._data.gameId
-  }
-
-  /**
-   *
-   * @param {SessionStore} store
-   * @param {string} sessionId
-   * @returns {string}
-   */
-  static async determineSessionId (store, sessionId) {
-    if (!sessionId) {
-      return await generateSessionId()
+async function getSessionData(store, sessionId) {
+    const data = await store.get(sessionId);
+    if (data) {
+        return data;
     }
-
-    if (await store.has(sessionId)) {
-      return sessionId
-    }
-
-    return await generateSessionId()
-  }
-
-  /**
-   *
-   * @param {string} sessionId
-   * @param {SessionStore} store
-   * @returns {Promise<Session>}
-   */
-  static async loadSession (store, sessionId) {
-    const data = await getSessionData(store, sessionId)
-
-    return new Session(sessionId, data)
-  }
+    return {};
 }
+class Session {
+    constructor(id, data) {
+        this._id = id;
+        this._data = data;
+    }
+    get id() {
+        return this._id;
+    }
+    get maxAge() {
+        return 30 * 24 * 3600 * 1000;
+    }
+    get data() {
+        return this._data;
+    }
+    get gameId() {
+        return this.data.gameId;
+    }
+    set gameId(value) {
+        this.data.gameId = value;
+    }
+    removeGameId() {
+        delete this._data.gameId;
+    }
+    static async determineSessionId(store, sessionId) {
+        if (!sessionId) {
+            return generateSessionId();
+        }
+        if (await store.has(sessionId)) {
+            return sessionId;
+        }
+        return generateSessionId();
+    }
+    static async loadSession(store, sessionId) {
+        const data = await getSessionData(store, sessionId);
+        return new Session(sessionId, data);
+    }
+}
+exports.Session = Session;
+//# sourceMappingURL=session.js.map
