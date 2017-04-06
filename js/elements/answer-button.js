@@ -32,6 +32,29 @@ export class AnswerButton extends HTMLButtonElement {
 
   /**
    *
+   * @param {boolean} isCorrect
+   */
+  setStatus (isCorrect) {
+    this._icon.src = `/icons/${isCorrect ? 'check' : 'cross'}.svg`
+
+    this._icon.addEventListener('load', () => {
+      window.setTimeout(() => {
+        this._icon.classList.add('-visible')
+      })
+    })
+  }
+
+  /**
+   *
+   * @returns {Element}
+   * @private
+   */
+  get _icon () {
+    return this.querySelector(':scope > .icon')
+  }
+
+  /**
+   *
    * @returns {string}
    */
   get answerId () {

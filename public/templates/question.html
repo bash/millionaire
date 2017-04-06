@@ -12,7 +12,10 @@
         <div class="basic-options">
             {{#question.answers}}
                 <div class="option">
-                    <button class="answer-button" is="answer-button" answer-id="{{id}}">{{title}}</button>
+                    <button class="answer-button" is="answer-button" answer-id="{{id}}">
+                        {{title}}
+                        <img class="icon" width="22" />
+                    </button>
                 </div>
             {{/question.answers}}
         </div>

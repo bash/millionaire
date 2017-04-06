@@ -1,5 +1,7 @@
 .answer-button {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   padding: 20px 36px;
   border-radius: 8px;
@@ -8,6 +10,15 @@
   transition: opacity .125s, color .125s, transform .5s;
 
   .user-select(none);
+
+  > .icon {
+    opacity: 0;
+    transition: opacity .5s;
+  }
+
+  > .icon.-visible {
+    opacity: 1;
+  }
 
   &:enabled {
     cursor: pointer;

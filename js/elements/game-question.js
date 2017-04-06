@@ -3,6 +3,8 @@ import { AnswerButton } from './answer-button'
 import { answerQuestion, useJoker, finishGame } from '../fetch'
 import { gameScore } from '../data/routes'
 
+const delay = (milliseconds) => new Promise((resolve) => window.setTimeout(resolve, milliseconds))
+
 export class GameQuestion extends HTMLElement {
   constructor () {
     super()
@@ -30,7 +32,11 @@ export class GameQuestion extends HTMLElement {
 
     button.setActive()
 
-    const { isFinished } = await answerQuestion(answerId)
+    const { isFinished, isCorrect } = await answerQuestion(answerId)
+
+    button.setStatus(isCorrect)
+
+    await delay(2000)
 
     if (isFinished) {
       this._finishGame()
