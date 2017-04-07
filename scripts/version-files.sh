@@ -1,7 +1,7 @@
 #!/bin/bash
 
 identifier () {
-  shasum $1 | awk '{print $1}' | base64 | cut -c1-10
+  shasum $1 | awk '{print $1}' | cut -c1-10
 }
 
 FILES=(
@@ -11,6 +11,8 @@ FILES=(
     public/polyfills/*.js
 )
 
+TEMPLATE=$(cat public/index.html)
+TEMPLATE_MAP=$(./scripts/template-map.py public/templates/*.html)
 PREFIX="public"
 
 for FILE in ${FILES[@]}; do
@@ -18,5 +20,11 @@ for FILE in ${FILES[@]}; do
   FILENAME="${FILE%.*}"
   VERSIONED="${FILENAME}-$(identifier "${FILE}").${EXTENSION}"
 
-  echo "${VERSIONED#$PREFIX}"
+  TEMPLATE=$(echo "${TEMPLATE}" | ./scripts/replace.py "${FILE#$PREFIX}" "${VERSIONED#$PREFIX}")
+
+  mv "${FILE}" "${VERSIONED}"
 done
+
+echo "${TEMPLATE}" \
+    | ./scripts/replace.py "window.templateMap = {}" "window.templateMap = ${TEMPLATE_MAP}" \
+    > public/index.html

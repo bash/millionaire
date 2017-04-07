@@ -6,9 +6,12 @@ ROLLUP := rollup -c .rollup.config.js
 LESS_FILES := $(shell find less -name "*.less")
 JS_FILES := $(shell find js -name "*.js")
 
-.PHONY: all
+.PHONY: all clean
 
 all: public/css/app.css public/js/app.js
+
+clean:
+	rm -rf public/css public/js
 
 public/css/app.css: $(LESS_FILES)
 	mkdir -p $(@D)

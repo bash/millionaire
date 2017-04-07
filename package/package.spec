@@ -1,5 +1,5 @@
 Name: millionaire
-Version: 0.1.4
+Version: 0.1.5
 Release: 1
 Summary: Millionaire
 License: AGPL
@@ -15,6 +15,7 @@ rm -rf $PWD
 mkdir -p $PWD
 cd $PWD
 
+cp -R %{_sourcedir}/scripts ./scripts
 cp -R %{_sourcedir}/data ./data
 cp -R %{_sourcedir}/js ./js
 cp -R %{_sourcedir}/less ./less
@@ -27,7 +28,9 @@ cp %{_sourcedir}/Makefile ./Makefile
 cp %{_sourcedir}/package.json ./package.json
 
 npm install
-make
+make clean
+BUILD_MODE=release make
+./scripts/version-files.sh
 npm prune --production
 
 

@@ -4,7 +4,7 @@ const HttpError = require('../http/http-error')
  *
  * @type {RegExp}
  */
-const NAME_REGEX = /^[\w\-]+$/
+const NAME_REGEX = /^[\w -]+$/
 
 /**
  *
