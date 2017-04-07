@@ -32,6 +32,13 @@ export class GameQuestion extends HTMLElement {
 
     button.setActive()
 
+    Array.from(this.querySelectorAll(AnswerButton.tagSelector()))
+      .filter(($button) => !$button.matches(AnswerButton.uniqueSelector(answerId)))
+      .forEach(($button) => {
+        $button.flipBack()
+        $button.disabled = true
+      })
+
     const { isFinished, isCorrect } = await answerQuestion(answerId)
 
     button.setStatus(isCorrect)
@@ -53,9 +60,7 @@ export class GameQuestion extends HTMLElement {
 
     incorrectAnswers
       .map(({ id }) => this.querySelector(AnswerButton.uniqueSelector(id)))
-      .forEach(($button) => {
-        $button.disabled = true
-      })
+      .forEach(($button) => $button.flip())
   }
 
   _finishGame () {

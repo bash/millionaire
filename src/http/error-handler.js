@@ -10,7 +10,7 @@ module.exports = function(error) {
   const { expose } = error
 
   if (!expose) {
-    console.log(error)
+    console.error(error)
   }
 
   const props = expose ? error.detail : 'Internal Server Error'

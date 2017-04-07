@@ -5,4 +5,4 @@ Description=Millionaire
 
 [Service]
 Restart=always
-ExecStart=/usr/local/bin/node /usr/src/millionaire/src/index.js
+ExecStart=/usr/src/millionaire/src/index.js

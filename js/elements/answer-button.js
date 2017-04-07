@@ -30,6 +30,15 @@ export class AnswerButton extends HTMLButtonElement {
     this.classList.add('-active')
   }
 
+  flip () {
+    this.classList.add('-flipped')
+    this.disabled = true
+  }
+
+  flipBack () {
+    this.classList.remove('-flipped')
+  }
+
   /**
    *
    * @param {boolean} isCorrect
@@ -68,5 +77,13 @@ export class AnswerButton extends HTMLButtonElement {
    */
   static uniqueSelector (answerId) {
     return `button[is="answer-button"][answer-id="${answerId}"]`
+  }
+
+  /**
+   *
+   * @returns {string}
+   */
+  static tagSelector () {
+    return `button[is="answer-button"]`
   }
 }
