@@ -95,7 +95,9 @@ module.exports = class DataStore {
    * @returns {Promise<number>}
    */
   async getScore (gameId) {
-    return Number.parseInt(await this._redis.get(gameScore(gameId))) || 0
+    const score = await this._redis.get(gameScore(gameId))
+
+    return Number.parseInt(score) || 0
   }
 
   /**

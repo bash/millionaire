@@ -12,16 +12,10 @@ module.exports.AnswerQuestionError = AnswerQuestionError
  */
 module.exports.answerQuestion = function (repository, dataStore, finishGame) {
   return async (gameId, answerId) => {
-    const [answer, questionId] = await Promise.all([
-      repository.getAnswer(answerId),
-      dataStore.getCurrentQuestion(gameId)
-    ])
+    const questionId = await dataStore.getCurrentQuestion(gameId)
+    const { id: correctAnswerId } = await repository.getCorrectAnswer(questionId)
 
-    const isCorrect = answer['is_correct']
-
-    if (answer['question_id'] !== questionId) {
-      throw new AnswerQuestionError('invalid answer', 'invalid_answer')
-    }
+    const isCorrect = (answerId === correctAnswerId)
 
     if (isCorrect) {
       await dataStore.incrementScore(gameId)
@@ -29,7 +23,10 @@ module.exports.answerQuestion = function (repository, dataStore, finishGame) {
       await dataStore.clearScore(gameId)
     }
 
-    await dataStore.removeCurrentQuestion(gameId)
+    await Promise.all([
+      dataStore.removeCurrentQuestion(gameId),
+      repository.createGameAnswer(gameId, answerId)
+    ])
 
     const nextQuestion = await dataStore.getCurrentQuestion(gameId)
     const isFinished = (!isCorrect || !nextQuestion)
@@ -38,6 +35,6 @@ module.exports.answerQuestion = function (repository, dataStore, finishGame) {
       await finishGame(gameId)
     }
 
-    return { isCorrect, isFinished }
+    return { isCorrect, isFinished, correctAnswerId }
   }
 }

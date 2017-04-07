@@ -26,3 +26,29 @@ module.exports.transaction = function transaction (pool, executor) {
     })
   })
 }
+
+/**
+ *
+ * @param {PG} pool
+ * @param {string} query
+ * @param {Array} params
+ * @returns {Promise<{}>}
+ */
+module.exports.fetchOne = async function fetchOne (pool, query, params) {
+  const result = await pool.query(query, params)
+
+  return result.rows[0]
+}
+
+/**
+ *
+ * @param {PG} pool
+ * @param {string} query
+ * @param {Array} params
+ * @returns {Promise<Array<{}>>}
+ */
+module.exports.fetchMany = async function fetchMany (pool, query, params) {
+  const result = await pool.query(query, params)
+
+  return result.rows
+}

@@ -7,14 +7,20 @@
 
 <game-question class="page-content" game-id="{{game.id}}">
     <section class="form-group">
-        <h1 class="question-title">{{question.title}}</h1>
+        <header class="question-header">
+            <h1 class="title">{{question.title}}</h1>
+
+            {{#question.correct_answer_rate}}
+                <p class="info">Diese Frage wurde zu {{question.correct_answer_rate}}% richtig beantwortet</p>
+            {{/question.correct_answer_rate}}
+        </header>
 
         <div class="basic-options">
             {{#question.answers}}
                 <div class="option">
                     <button class="answer-button" is="answer-button" answer-id="{{id}}">
                         {{title}}
-                        <img class="icon" width="22" />
+                        <img class="icon" src="/icons/check.svg" width="22" />
                     </button>
                 </div>
             {{/question.answers}}
@@ -22,7 +28,17 @@
     </section>
 
     <section class="form-group">
-        <button class="basic-button" is="event-button" event-name="useJoker" {{#game.has_used_joker}}disabled{{/game.has_used_joker}}>50:50</button>
-        <button class="basic-button" is="event-button" event-name="collectReward">Gewinn Realisieren</button>
+        <div class="basic-options">
+            <div class="option">
+                <p class="game-score">
+                    Aktuelle Punktezahl: {{game.score}}
+                </p>
+
+                <button class="basic-button" is="event-button" event-name="collectReward">Gewinn Realisieren</button>
+            </div>
+            <div class="option">
+                <button class="basic-button" is="event-button" event-name="useJoker" {{#game.has_used_joker}}disabled{{/game.has_used_joker}}>50:50 Joker</button>
+            </div>
+        </div>
     </section>
 </game-question>

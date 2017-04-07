@@ -81,8 +81,8 @@ export function answerQuestion (answerId) {
 
   return window.fetch('/api/game/answer', { method: Method.POST, credentials: 'include', body })
     .then((resp) => resp.json())
-    .then(({ is_correct, is_finished }) => {
-      return { isCorrect: is_correct, isFinished: is_finished }
+    .then(({ is_correct, is_finished, correct_answer_id }) => {
+      return { isCorrect: is_correct, isFinished: is_finished, correctAnswerId: correct_answer_id }
     })
 }
 

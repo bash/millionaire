@@ -28,10 +28,8 @@ export class GameQuestion extends HTMLElement {
 
   async _onSelectAnswer (event) {
     const answerId = event.detail.answerId
-    const button = event.target
 
-    button.setActive()
-
+    // disable all other questions
     Array.from(this.querySelectorAll(AnswerButton.tagSelector()))
       .filter(($button) => !$button.matches(AnswerButton.uniqueSelector(answerId)))
       .forEach(($button) => {
@@ -39,10 +37,15 @@ export class GameQuestion extends HTMLElement {
         $button.disabled = true
       })
 
-    const { isFinished, isCorrect } = await answerQuestion(answerId)
+    // submit answer
+    const { isFinished, correctAnswerId } = await answerQuestion(answerId)
+    // find correct answer
+    const $correctAnswer = this.querySelector(AnswerButton.uniqueSelector(correctAnswerId))
 
-    button.setStatus(isCorrect)
+    // show check icon to indicate answer is correct
+    $correctAnswer.showIcon()
 
+    // short delay to let player read correct answer
     await delay(2000)
 
     if (isFinished) {

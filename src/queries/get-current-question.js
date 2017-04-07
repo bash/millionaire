@@ -15,13 +15,13 @@ module.exports = function (repository, dataStore) {
     const questionId = await dataStore.getCurrentQuestion(gameId)
 
     if (!questionId) {
-      return
+      return null
     }
 
     const question = await repository.getQuestionById(questionId)
 
     if (!question) {
-      return
+      return null
     }
 
     return Object.assign(question, {

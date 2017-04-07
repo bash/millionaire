@@ -20,13 +20,15 @@ export class AnswerButton extends HTMLButtonElement {
    * @private
    */
   _onClick () {
+    this._setActive()
+
     this.dispatchEvent(new CustomEvent(EventName.SelectAnswer, {
       bubbles: true,
       detail: { answerId: this.answerId }
     }))
   }
 
-  setActive () {
+  _setActive () {
     this.classList.add('-active')
   }
 
@@ -39,18 +41,8 @@ export class AnswerButton extends HTMLButtonElement {
     this.classList.remove('-flipped')
   }
 
-  /**
-   *
-   * @param {boolean} isCorrect
-   */
-  setStatus (isCorrect) {
-    this._icon.src = `/icons/${isCorrect ? 'check' : 'cross'}.svg`
-
-    this._icon.addEventListener('load', () => {
-      window.setTimeout(() => {
-        this._icon.classList.add('-visible')
-      })
-    })
+  showIcon () {
+    this._icon.classList.add('-visible')
   }
 
   /**

@@ -97,6 +97,18 @@ CREATE OR REPLACE VIEW mill.game_question AS
       ON category.game_id = game.id
   GROUP BY question.id, game.id;
 
+
+CREATE OR REPLACE VIEW mill.question_stat AS
+  SELECT
+    question.id AS id,
+    count(1) FILTER (WHERE answer.is_correct = TRUE) as correct_answers,
+    count(1) FILTER (WHERE answer.is_correct = FALSE) as incorrect_answers,
+    (100.0 / count(1) * (count(1) FILTER (WHERE answer.is_correct = TRUE))) as correct_answer_rate
+  FROM mill.question AS question
+    JOIN mill.answer AS answer ON question.id = answer.question_id
+    JOIN mill.game_answer AS game_answer ON answer.id = game_answer.answer_id
+  GROUP BY question.id;
+
 -- Todo: this table introduces redundant data
 -- Todo: ... but is required for the admin to be able to delete high score entries
 -- Todo: ... without deleting the user/game itself

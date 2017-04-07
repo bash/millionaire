@@ -11,7 +11,7 @@ module.exports = function (answerQuestion) {
     const answerId = ctx.request.body['answer_id']
 
     // TODO: convert error to HttpError
-    const { isFinished, isCorrect } = await answerQuestion(gameId, answerId)
+    const { isFinished, isCorrect, correctAnswerId } = await answerQuestion(gameId, answerId)
 
     if (isFinished) {
       ctx.session.removeGameId()
@@ -19,7 +19,8 @@ module.exports = function (answerQuestion) {
 
     ctx.body = {
       is_finished: isFinished,
-      is_correct: isCorrect
+      is_correct: isCorrect,
+      correct_answer_id: correctAnswerId
     }
   }
 }

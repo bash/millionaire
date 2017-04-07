@@ -1,4 +1,4 @@
-const { transaction } = require('./database')
+const { transaction, fetchOne, fetchMany } = require('./database')
 const { toTimestamp } = require('./helpers/date')
 
 // TODO: should rename to GameRepository, create separate repository for admin
@@ -143,26 +143,38 @@ module.exports = class Repository {
    * @returns {Promise<{}>}
    */
   async getQuestionById (id) {
-    const result = await this._pool.query(
-      `SELECT question.id, question.title, category.name as category
+    const questionQuery = fetchOne(
+      this._pool,
+      `SELECT
+         question.id,
+         question.title,
+         category.name as category
        FROM mill.question AS question
        JOIN mill.category AS category ON question.category_id = category.id
        WHERE question.id = $1::bigint`,
       [id]
     )
 
-    const question = result.rows[0]
+    const statQuery = fetchOne(
+      this._pool,
+      'SELECT correct_answer_rate FROM mill.question_stat WHERE id = $1::bigint',
+      [id]
+    )
+
+    const answersQuery = fetchMany(
+      this._pool,
+      `SELECT id, title FROM mill.answer WHERE question_id = $1::bigint`,
+      [id]
+    )
+
+    const [question, stats, answers] = await Promise.all([questionQuery, statQuery, answersQuery])
+    const correctAnswerRate = stats ? stats.correct_answer_rate : null
 
     if (!question) {
       return null
     }
 
-    const answers = await this._pool.query(
-      `SELECT id, title FROM mill.answer WHERE question_id = $1::bigint`,
-      [id]
-    )
-
-    return Object.assign(question, { answers: answers.rows })
+    return Object.assign(question, { answers, correctAnswerRate })
   }
 
   /**
@@ -183,17 +195,16 @@ module.exports = class Repository {
 
   /**
    *
-   * @param {string} answerId
+   * @param {string} questionId
    * @returns {Promise<{}>}
    */
-  async getAnswer (answerId) {
-    const result = await this._pool.query(
-      `SELECT question_id, is_correct FROM mill.answer
-       WHERE id = $1::bigint`,
-      [answerId]
+  async getCorrectAnswer (questionId) {
+    return fetchOne(
+      this._pool,
+      `SELECT id FROM mill.answer
+       WHERE question_id = $1::bigint AND is_correct = TRUE`,
+      [questionId]
     )
-
-    return result.rows[0]
   }
 
   /**
@@ -232,6 +243,19 @@ module.exports = class Repository {
     )
 
     return result.rows[0].duration
+  }
+
+  /**
+   *
+   * @param {string} gameId
+   * @param {string} answerId
+   * @returns {Promise<void>}
+   */
+  async createGameAnswer (gameId, answerId) {
+    return this._pool.query(
+      'INSERT INTO mill.game_answer (game_id, answer_id) VALUES($1::bigint, $2::bigint)',
+      [gameId, answerId]
+    )
   }
 
   /**
