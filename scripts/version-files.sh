@@ -26,5 +26,7 @@ for FILE in ${FILES[@]}; do
 done
 
 echo "${TEMPLATE}" \
-    | ./scripts/replace.py "window.templateMap = {}" "window.templateMap = ${TEMPLATE_MAP}" \
+    | ./scripts/replace.py \
+        "<script type=\"application/json\" id=\"template-map\">{}</script>" \
+        "<script type=\"application/json\" id=\"template-map\">${TEMPLATE_MAP}</script>" \
     > public/index.html

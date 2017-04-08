@@ -2,6 +2,7 @@ localhost:8000
 root public
 tls off
 
+header / Content-Security-Policy "default-src 'none'; script-src 'self' 'sha256-etXmOpuV6vPlS5Ow++V7FZvmPXSLC6nKZKk/5RDq5ik='; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'none'; block-all-mixed-content; disown-opener; sandbox allow-scripts allow-same-origin; reflected-xss block; manifest-src 'none'; referrer origin-when-cross-origin; require-sri-for script style;"
 proxy /api localhost:3000
 
 rewrite {

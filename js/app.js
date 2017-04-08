@@ -6,6 +6,8 @@ import { EventButton } from './elements/event-button'
 import { AnswerButton } from './elements/answer-button'
 import { GameQuestion } from './elements/game-question'
 
+window.templateMap = JSON.parse(document.getElementById('template-map').innerText)
+
 window.customElements.define('app-router', AppRouter)
 window.customElements.define('app-link', AppLink, { extends: 'a' })
 window.customElements.define('app-view', AppView)
