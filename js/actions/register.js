@@ -1,9 +1,10 @@
+import { createGame } from '../fetch'
+
 /**
  *
  * @param {FormData} form
  * @returns {Promise}
  */
-import { createGame } from '../fetch'
 export async function registerAction (form) {
   const name = form.get('name')
   const categories = form.getAll('category')
