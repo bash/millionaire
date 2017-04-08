@@ -45,7 +45,6 @@ export class AppRouter extends window.HTMLElement {
       return this.setRoute(redirect, true)
     }
 
-    // noinspection ES6ModulesDependencies,NodeModulesDependencies
     const rendered = window.Mustache.render(template, data)
     const view = new AppView(templateName, rendered)
 
