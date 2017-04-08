@@ -116,3 +116,11 @@ export function login (username, password) {
       return { isValid: is_valid }
     })
 }
+
+/**
+ *
+ * @returns {Promise<{ authenticated: boolean }>}
+ */
+export function fetchAuthState () {
+  return fetch('/auth')
+}

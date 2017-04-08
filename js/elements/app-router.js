@@ -3,6 +3,8 @@ import { resolve } from '../data/routes'
 import { AppView } from './app-view'
 import { hideCurrentToast } from './toast-message'
 
+const nextTask = () => new Promise((resolve) => window.setTimeout(resolve))
+
 export class AppRouter extends window.HTMLElement {
   constructor () {
     super()
@@ -28,7 +30,11 @@ export class AppRouter extends window.HTMLElement {
 
   async _render () {
     const loader = resolve(this.route)
-    const { template, templateName, data } = await loader()
+    const { template, templateName, data, redirect } = await loader()
+
+    if (redirect) {
+      return this.setRoute(redirect, true)
+    }
 
     // noinspection ES6ModulesDependencies,NodeModulesDependencies
     const rendered = window.Mustache.render(template, data)
@@ -38,6 +44,13 @@ export class AppRouter extends window.HTMLElement {
 
     // noinspection JSIgnoredPromiseFromCall
     hideCurrentToast()
+
+    // custom elements inside the view might append content that is needed for the transition
+    // due to the nature of custom elements and their polyfill the content inside the custom element
+    // might not be initialized yet, so we wait for the next task
+    // (this means all pending promises, custom element reactions,
+    //  mutation observer events and tasks have been executed)
+    await nextTask()
 
     await this._transitionIntoView(view)
 

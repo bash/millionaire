@@ -14,6 +14,7 @@ const useJoker = require('../handlers/use-joker')
 const answerQuestion = require('../handlers/answer-question')
 const finishGame = require('../handlers/finish-game')
 const login = require('../handlers/login')
+const getAuthState = require('../handlers/get-auth-state')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -53,6 +54,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(post('/api/game/answer', answerQuestion(answerQuestionCommand)))
   app.use(post('/api/game/finish', finishGame(finishGameCommand)))
   app.use(post('/api/login', login(verifyLogin)))
+  app.use(get('/api/auth', getAuthState()))
 
   return app
 }
