@@ -46,10 +46,10 @@ export class AppRouter extends window.HTMLElement {
     hideCurrentToast()
 
     // custom elements inside the view might append content that is needed for the transition
-    // due to the nature of custom elements and their polyfill the content inside the custom element
-    // might not be initialized yet, so we wait for the next task
+    // due to the nature of how custom element reactions those might
+    // not have been triggered yet, so we are waiting for the next task
     // (this means all pending promises, custom element reactions,
-    //  mutation observer events and tasks have been executed)
+    //  mutation observer events and tasks will have executed)
     await nextTask()
 
     await this._transitionIntoView(view)
