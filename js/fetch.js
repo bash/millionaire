@@ -143,3 +143,12 @@ export function createCategory (name) {
 export function fetchScoreboard () {
   return fetch('/scoreboard')
 }
+
+/**
+ *
+ * @param {string} id
+ * @returns {Promise}
+ */
+export function hideScoreboardEntry (id) {
+  return fetch(`/scoreboard/${encodeURIComponent(id)}/hidden`, { method: 'POST' })
+}

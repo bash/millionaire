@@ -33,4 +33,16 @@ module.exports = class BackendRepository {
 
     return id
   }
+
+  /**
+   *
+   * @param {string} scoreId
+   * @returns {Promise<void>}
+   */
+  hideScoreboardEntry (scoreId) {
+    return this._pool.query(
+      'UPDATE mill.score SET hidden = TRUE WHERE id = $1::bigint',
+      [scoreId]
+    )
+  }
 }

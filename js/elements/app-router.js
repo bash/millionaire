@@ -2,6 +2,7 @@ import { EventName } from '../data/event'
 import { resolve } from '../data/routes'
 import { AppView } from './app-view'
 import { hideCurrentToast } from './toast-message'
+import { handleError } from '../error'
 
 const nextTask = () => new Promise((resolve) => window.setTimeout(resolve))
 
@@ -29,6 +30,14 @@ export class AppRouter extends window.HTMLElement {
   }
 
   async _render () {
+    try {
+      await this._doRender()
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async _doRender () {
     const loader = resolve(this.route)
     const { template, templateName, data, redirect } = await loader()
 

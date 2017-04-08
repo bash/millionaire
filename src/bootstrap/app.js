@@ -17,6 +17,7 @@ const login = require('../handlers/login')
 const getAuthState = require('../handlers/get-auth-state')
 const createCategory = require('../handlers/create-category')
 const getScoreboard = require('../handlers/get-scoreboard')
+const hideScoreboardEntry = require('../handlers/hide-scoreboard-entry')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -26,6 +27,7 @@ const _finishGameCommand = require('../commands/finish-game')
 const _verifyLogin = require('../queries/verify-login')
 const _createCategoryCommand = require('../commands/create-category')
 const _getScoreboardQuery = require('../queries/get-scoreboard')
+const _hideScoreboardEntryCommand = require('../commands/hide-scoreboard-entry')
 
 /**
  *
@@ -43,6 +45,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const verifyLogin = _verifyLogin(backendRepository)
   const createCategoryCommand = _createCategoryCommand(backendRepository)
   const getScoreboardQuery = _getScoreboardQuery(repository)
+  const hideScoreboardEntryCommand = _hideScoreboardEntryCommand(backendRepository)
 
   const app = new Application()
 
@@ -63,6 +66,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(get('/api/auth', getAuthState()))
   app.use(post('/api/categories', createCategory(createCategoryCommand)))
   app.use(get('/api/scoreboard', getScoreboard(getScoreboardQuery)))
+  app.use(post('/api/scoreboard/:id/hidden', hideScoreboardEntry(hideScoreboardEntryCommand)))
 
   return app
 }

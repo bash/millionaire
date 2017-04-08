@@ -1,13 +1,16 @@
 import { loginAction } from '../actions/login'
 import { EventName } from '../data/event'
-import { createToastMessage } from './toast-message'
+import { showToastMessage } from './toast-message'
 import { registerAction } from '../actions/register'
 import { createCategoryAction } from '../actions/create-category'
+import { hideScoreboardEntryAction } from '../actions/hide-scoreboard-entry'
+import { handleError } from '../error'
 
 const actions = {
   'login': loginAction,
   'register': registerAction,
-  'create-category': createCategoryAction
+  'create-category': createCategoryAction,
+  'hide-scoreboard-entry': hideScoreboardEntryAction
 }
 
 export class AppForm extends window.HTMLFormElement {
@@ -28,13 +31,21 @@ export class AppForm extends window.HTMLFormElement {
   async _onSubmit (event) {
     event.preventDefault()
 
+    try {
+      await this._submit()
+    } catch (error) {
+      handleError(error)
+    }
+  }
+
+  async _submit () {
     const data = new FormData(this)
     const action = actions[this.formAction]
 
     const { error, route } = await action(data)
 
     if (error) {
-      await createToastMessage(error).show()
+      await showToastMessage(error)
     }
 
     if (route) {

@@ -8,6 +8,7 @@ import { finished } from '../animation'
 export async function landingToRegister (landing, register) {
   const $title = landing.querySelector('.landing-page > .title')
   const $button = landing.querySelector('.landing-page > .button')
+  const $links = landing.querySelector('.landing-page > .links')
 
   const $header = register.querySelector('.page-header')
   const $content = register.querySelector('.page-content')
@@ -22,7 +23,7 @@ export async function landingToRegister (landing, register) {
 
   register.show()
 
-  const buttonAnimation = $button.animate(
+  const fadeOut = [
     [
       { opacity: 1 },
       { opacity: 0 }
@@ -32,9 +33,15 @@ export async function landingToRegister (landing, register) {
       fill: 'forwards',
       easing: 'ease'
     }
-  )
+  ]
 
-  await finished(buttonAnimation)
+  const buttonAnimation = $button.animate(...fadeOut)
+  const linksAnimation = $links.animate(...fadeOut)
+
+  await Promise.all([
+    finished(buttonAnimation),
+    finished(linksAnimation)
+  ])
 
   const titleAnimation = $title.animate(
     [

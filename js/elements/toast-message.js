@@ -19,6 +19,28 @@ export function createToastMessage(message, ttl = 4000) {
 
 /**
  *
+ * @param {string} message
+ * @param {number} ttl
+ * @returns {Promise<ToastMessage>}
+ */
+export async function showToastMessage (message, ttl = 4000) {
+  const $toast = createToastMessage(message, ttl)
+
+  await $toast.show()
+
+  return $toast
+}
+
+/**
+ *
+ * @returns {Promise<ToastMessage>}
+ */
+export function showInternalErrorToast () {
+  return showToastMessage('Hoppla - Da ist wohl etwas schief gelaufen')
+}
+
+/**
+ *
  * @returns {Promise}
  */
 export function hideCurrentToast () {

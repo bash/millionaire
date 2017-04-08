@@ -8,5 +8,40 @@
 </nav>
 
 <div class="page-content">
-
+    <table>
+        <thead>
+        <tr>
+            <th>Rang</th>
+            <th>
+                Punkte
+                <span class="cell-meta">Punkte / Zeit</span>
+            </th>
+            <th>
+                Name
+                <span class="cell-meta">Datum</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#scores}}
+            <tr>
+                <td>#{{rank}}</td>
+                <td>
+                    {{weighted_score}}
+                    <span class="cell-meta">{{score}}P / {{duration}}s</span>
+                </td>
+                <td>
+                    {{name}}
+                    <span class="cell-meta">{{date}}</span>
+                </td>
+                <td>
+                    <form is="app-form" form-action="hide-scoreboard-entry">
+                        <input type="hidden" name="score_id" value="{{id}}">
+                        <button type="submit" class="basic-button -small">Löschen</button>
+                    </form>
+                </td>
+            </tr>
+        {{/scores}}
+        </tbody>
+    </table>
 </div>

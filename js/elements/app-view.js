@@ -4,7 +4,8 @@ const transitions = {
   'landing:register': landingToRegister,
   'landing:question': landingToRegister,
   'landing:login': landingToRegister,
-  'landing:score': landingToRegister
+  'landing:score': landingToRegister,
+  'landing:scoreboard': landingToRegister
 }
 
 export class AppView extends window.HTMLElement {
