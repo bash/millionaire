@@ -2,7 +2,7 @@ const Application = require('koa')
 const { get, post } = require('koa-route')
 
 const bodyParser = require('koa-bodyparser')
-const session = require('../middleware/session')
+const session = require('../middlewares/session')
 const errorHandler = require('../http/error-handler')
 
 const getGame = require('../handlers/get-game')
@@ -13,25 +13,29 @@ const getCurrentQuestion = require('../handlers/get-current-question')
 const useJoker = require('../handlers/use-joker')
 const answerQuestion = require('../handlers/answer-question')
 const finishGame = require('../handlers/finish-game')
+const login = require('../handlers/login')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
 const { useJoker: _useJokerCommand } = require('../commands/use-joker')
 const { answerQuestion: _answerQuestionCommand } = require('../commands/answer-question')
 const _finishGameCommand = require('../commands/finish-game')
+const _verifyLogin = require('../queries/verify-login')
 
 /**
  *
  * @param {Repository} repository
+ * @param {BackendRepository} backendRepository
  * @param {DataStore} dataStore
  * @returns {Application}
  */
-module.exports = function bootstrapApp (repository, dataStore) {
+module.exports = function bootstrapApp (repository, backendRepository, dataStore) {
   const createGameCommand = _createGameCommand(repository, dataStore)
   const getCurrentQuestionQuery = _getCurrentQuestionQuery(repository, dataStore)
   const useJokerCommand = _useJokerCommand(repository, dataStore)
   const finishGameCommand = _finishGameCommand(repository, dataStore)
   const answerQuestionCommand = _answerQuestionCommand(repository, dataStore, finishGameCommand)
+  const verifyLogin = _verifyLogin(backendRepository)
 
   const app = new Application()
 
@@ -48,6 +52,7 @@ module.exports = function bootstrapApp (repository, dataStore) {
   app.use(post('/api/game/joker', useJoker(useJokerCommand)))
   app.use(post('/api/game/answer', answerQuestion(answerQuestionCommand)))
   app.use(post('/api/game/finish', finishGame(finishGameCommand)))
+  app.use(post('/api/login', login(verifyLogin)))
 
   return app
 }

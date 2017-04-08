@@ -30,7 +30,7 @@ module.exports = class SessionStore {
   /**
    *
    * @param {string} sessionId
-   * @returns {Promise<{}|null>}
+   * @returns {Promise<Array|null>}
    */
   async get (sessionId) {
     const rawData = await this._dataStore.get(sessionKey(sessionId))
@@ -45,11 +45,11 @@ module.exports = class SessionStore {
   /**
    *
    * @param {string} sessionId
-   * @param {{}} data
+   * @param {Map} data
    * @param {number} maxAge
    * @returns {Promise}
    */
   async set (sessionId, data, maxAge) {
-    await this._dataStore.set(sessionKey(sessionId), JSON.stringify(data), { maxAge })
+    await this._dataStore.set(sessionKey(sessionId), JSON.stringify([...data]), { maxAge })
   }
 }

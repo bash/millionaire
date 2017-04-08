@@ -27,7 +27,7 @@ async function generateSessionId () {
  *
  * @param {string} sessionId
  * @param {SessionStore} store
- * @returns {Promise<{}>}
+ * @returns {Promise<Array>}
  */
 async function getSessionData (store, sessionId) {
   const data = await store.get(sessionId)
@@ -36,14 +36,14 @@ async function getSessionData (store, sessionId) {
     return data
   }
 
-  return {}
+  return []
 }
 
 module.exports = class Session {
   /**
    *
    * @param {string} sessionId
-   * @param {{}} data
+   * @param {Map} data
    */
   constructor (sessionId, data) {
     this._id = sessionId
@@ -68,7 +68,7 @@ module.exports = class Session {
 
   /**
    *
-   * @returns {{}}
+   * @returns {Map}
    */
   get data () {
     return this._data
@@ -79,7 +79,7 @@ module.exports = class Session {
    * @returns {string}
    */
   get gameId () {
-    return this.data.gameId
+    return this._data.get('gameId')
   }
 
   /**
@@ -87,11 +87,31 @@ module.exports = class Session {
    * @param {string} value
    */
   set gameId (value) {
-    this.data.gameId = value
+    this._data.set('gameId', value)
   }
 
   removeGameId () {
-    delete this._data.gameId
+    this._data.delete('gameId')
+  }
+
+  /**
+   *
+   * @returns {string}
+   */
+  get adminId () {
+    return this._data.get('adminId')
+  }
+
+  /**
+   *
+   * @param {string} value
+   */
+  set adminId (value) {
+    return this._data.set('adminId', value)
+  }
+
+  removeAdminId () {
+    return this._data.delete('adminId')
   }
 
   /**
@@ -121,6 +141,6 @@ module.exports = class Session {
   static async loadSession (store, sessionId) {
     const data = await getSessionData(store, sessionId)
 
-    return new Session(sessionId, data)
+    return new Session(sessionId, new Map(data))
   }
 }

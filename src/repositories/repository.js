@@ -1,5 +1,5 @@
-const { transaction, fetchOne, fetchMany } = require('./database')
-const { toTimestamp } = require('./helpers/date')
+const { transaction, fetchOne, fetchMany } = require('./../database')
+const { toTimestamp } = require('./../helpers/date')
 
 // TODO: should rename to GameRepository, create separate repository for admin
 module.exports = class Repository {
