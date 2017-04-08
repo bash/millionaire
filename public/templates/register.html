@@ -6,12 +6,10 @@
 </header>
 
 <section class="page-content">
-
-    <register-form>
-
+    <form is="app-form" form-action="register">
         <section class="form-group">
             <h2 class="title">Bitte gib deinen Namen hier ein:</h2>
-            <input type="text" placeholder="Name" name="name" class="basic-input" autocomplete="off"/>
+            <input type="text" placeholder="Name" name="name" class="basic-input" autocomplete="off" />
         </section>
 
         <section class="form-group">
@@ -20,7 +18,7 @@
             <category-picker class="basic-options">
                 {{#categories}}
                     <label class="option">
-                        <input type="checkbox" is="category-pick" value="{{id}}">
+                        <input type="checkbox" name="category" value="{{id}}">
                         <span class="label">{{name}}</span>
                     </label>
                 {{/categories}}
@@ -30,8 +28,5 @@
         <section class="form-group">
             <button class="basic-button">Starten</button>
         </section>
-
-    </register-form>
-
-
+    </form>
 </section>

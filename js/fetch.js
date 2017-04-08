@@ -1,17 +1,24 @@
-const Method = Object.freeze({
-  POST: 'POST'
-})
+/**
+ *
+ * @param {string} url
+ * @param {FetchInit} [options]
+ * @returns {Promise<{}|Array>}
+ */
+const fetch = (url, options = {}) => {
+  return window.fetch(`/api${url}`, Object.assign({ credentials: 'include' }, options))
+    .then((resp) => resp.json())
+}
 
 /**
  *
- * @param {Array<string>} params
+ * @param {{}} params
  * @returns {URLSearchParams}
  */
-const buildParams = (...params) => {
+const params = (params) => {
   const result = new window.URLSearchParams()
 
   // TODO: this method is somewhat ugly -> clean up
-  params.forEach(([key, value]) => {
+  Object.entries(params).forEach(([key, value]) => {
     if (Array.isArray(value)) {
       value.forEach((item) => result.append(`${key}[]`, item))
     } else {
@@ -27,8 +34,7 @@ const buildParams = (...params) => {
  * @returns {Promise<{ state: string }>}
  */
 export function fetchCurrentGame () {
-  return window.fetch('/api/game', { credentials: 'include' })
-    .then((resp) => resp.json())
+  return fetch('/game')
 }
 
 /**
@@ -36,8 +42,7 @@ export function fetchCurrentGame () {
  * @returns {Promise<Array<{id: number, name: string}>>}
  */
 export function fetchCategories () {
-  return window.fetch('/api/categories', { credentials: 'include' })
-    .then((resp) => resp.json())
+  return fetch('/categories')
 }
 
 /**
@@ -47,10 +52,9 @@ export function fetchCategories () {
  * @returns {Promise}
  */
 export function createGame (name, categories) {
-  const body = buildParams(['name', name], ['categories', categories])
+  const body = params({ name, categories })
 
-  return window.fetch('/api/games', { method: Method.POST, credentials: 'include', body })
-    .then((resp) => resp.json())
+  return fetch('/games', { method: 'POST', body })
 }
 
 /**
@@ -58,8 +62,7 @@ export function createGame (name, categories) {
  * @returns {Promise<{}>}
  */
 export function fetchCurrentQuestion () {
-  return window.fetch('/api/game/question', { credentials: 'include' })
-    .then((resp) => resp.json())
+  return fetch('/game/question')
 }
 
 /**
@@ -67,8 +70,7 @@ export function fetchCurrentQuestion () {
  * @returns {Promise<Array<{}>>}
  */
 export function useJoker () {
-  return window.fetch('/api/game/joker', { method: Method.POST, credentials: 'include' })
-    .then((resp) => resp.json())
+  return fetch('/game/joker', { method: 'POST' })
 }
 
 /**
@@ -77,10 +79,9 @@ export function useJoker () {
  * @returns {Promise<Array<{}>>}
  */
 export function answerQuestion (answerId) {
-  const body = buildParams(['answer_id', answerId])
+  const body = params({ answer_id: answerId })
 
-  return window.fetch('/api/game/answer', { method: Method.POST, credentials: 'include', body })
-    .then((resp) => resp.json())
+  return fetch('/game/answer', { method: 'POST', body })
     .then(({ is_correct, is_finished, correct_answer_id }) => {
       return { isCorrect: is_correct, isFinished: is_finished, correctAnswerId: correct_answer_id }
     })
@@ -91,8 +92,7 @@ export function answerQuestion (answerId) {
  * @returns {Promise}
  */
 export function finishGame () {
-  return window.fetch(`/api/game/finish`, { method: Method.POST, credentials: 'include' })
-    .then((resp) => resp.json())
+  return fetch(`/game/finish`, { method: 'POST' })
 }
 
 /**
@@ -100,6 +100,19 @@ export function finishGame () {
  * @param {string} gameId
  */
 export function fetchGame (gameId) {
-  return window.fetch(`/api/games/${encodeURIComponent(gameId)}`, { credentials: 'include' })
-    .then((resp) => resp.json())
+  return fetch(`/games/${encodeURIComponent(gameId)}`)
+}
+
+/**
+ *
+ * @param username
+ * @param password
+ */
+export function login (username, password) {
+  const body = params({ username, password })
+
+  return fetch('/login', { method: 'POST', body })
+    .then(({ is_valid }) => {
+      return { isValid: is_valid }
+    })
 }

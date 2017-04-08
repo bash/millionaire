@@ -1,6 +1,7 @@
 import { EventName } from '../data/event'
 import { resolve } from '../data/routes'
 import { AppView } from './app-view'
+import { hideCurrentToast } from './toast-message'
 
 export class AppRouter extends window.HTMLElement {
   constructor () {
@@ -34,6 +35,9 @@ export class AppRouter extends window.HTMLElement {
     const view = new AppView(templateName, rendered)
 
     this.appendChild(view)
+
+    // noinspection JSIgnoredPromiseFromCall
+    hideCurrentToast()
 
     await this._transitionIntoView(view)
 

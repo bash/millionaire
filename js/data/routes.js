@@ -32,6 +32,10 @@ const routes = [
   {
     route: new Route('/score/@gameId'),
     loader: scoreLoader()
+  },
+  {
+    route: new Route('/login'),
+    loader: staticLoader('login')
   }
 ]
 

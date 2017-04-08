@@ -1,14 +1,14 @@
 .basic-input {
   width: 100%;
   padding: 20px 36px;
-  border-radius: 8px;
+  border-radius: var(--box-border-radius);
   background-color: var(--brand-color);
   color: #fff;
-  opacity: .56;
+  opacity: @idle-opacity;
   transition: opacity .125s;
 
   &:focus {
-    opacity: 1;
+    opacity: @active-opacity;
   }
 
   @placeholder-color: rgba(0, 0, 0, .7);
