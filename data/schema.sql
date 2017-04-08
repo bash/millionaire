@@ -118,7 +118,24 @@ CREATE TABLE mill.score (
   id BIGINT PRIMARY KEY DEFAULT mill.next_id(),
   score INT NOT NULL,
   weighted_score DOUBLE PRECISION NOT NULL,
+  deleted BOOLEAN NOT NULL DEFAULT FALSE,
   game_id BIGINT NULL REFERENCES mill.game (id) ON DELETE SET NULL
 );
 
 CREATE UNIQUE INDEX score_game_id ON mill.score (game_id);
+
+CREATE VIEW mill.scoreboard AS
+  SELECT
+    score.id,
+    game.id as game_id,
+    score.score,
+    score.weighted_score,
+    player.name,
+    game.started_at,
+    extract(epoch from (game.ended_at::timestamp - game.started_at::timestamp)) as duration
+  FROM mill.score AS score
+  JOIN mill.game AS game ON score.game_id = game.id
+  JOIN mill.player AS player ON game.player_id = player.id
+  WHERE score.score > 0
+  ORDER BY score.score DESC;
+

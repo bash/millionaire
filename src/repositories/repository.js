@@ -271,4 +271,40 @@ module.exports = class Repository {
       [gameId, score, weightedScore]
     )
   }
+
+  /**
+   *
+   * @returns {Promise<Array>}
+   */
+  async getScoreboard () {
+    const scores = await query(
+      this._pool,
+      'SELECT * FROM mill.scoreboard'
+    )
+
+    return scores.map((score, i) => {
+      return Object.assign(score, {
+        started_at: toTimestamp(score.started_at),
+        rank: (i + 1)
+      })
+    })
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @returns {Promise<{}>}
+   */
+  async getGameCategories (id) {
+    return query(
+      this._pool,
+      `SELECT
+         category.id,
+         category.name
+       FROM mill.category AS category
+       JOIN mill.game_category AS game_category ON category.id = game_category.category_id
+       WHERE game_category.game_id = $1::bigint`,
+      [id]
+    )
+  }
 }

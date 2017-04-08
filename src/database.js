@@ -44,10 +44,10 @@ module.exports.queryOne = async function fetchOne (pool, query, params) {
  *
  * @param {PG} pool
  * @param {string} query
- * @param {Array} params
+ * @param {Array} [params]
  * @returns {Promise<Array<{}>>}
  */
-module.exports.query = async function fetchMany (pool, query, params) {
+module.exports.query = async function fetchMany (pool, query, params = []) {
   const result = await pool.query(query, params)
 
   return result.rows

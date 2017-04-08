@@ -3,6 +3,7 @@ import { landingToRegister } from '../transitions/landing-to-register'
 const transitions = {
   'landing:register': landingToRegister,
   'landing:question': landingToRegister,
+  'landing:login': landingToRegister,
   'landing:score': landingToRegister
 }
 

@@ -1,0 +1,39 @@
+<app-header></app-header>
+<div class="page-content">
+    <table>
+        <thead>
+        <tr>
+            <th>Rang</th>
+            <th>
+                Punkte
+                <span class="cell-meta">Punkte / Zeit</span>
+            </th>
+            <th>
+                Name
+                <span class="cell-meta">Datum</span>
+            </th>
+            <th>
+                Kategorien
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            {{#scores}}
+                <tr>
+                    <td>#{{rank}}</td>
+                    <td>
+                        {{weighted_score}}
+                        <span class="cell-meta">{{score}}P / {{duration}}s</span>
+                    </td>
+                    <td>
+                        {{name}}
+                        <span class="cell-meta">{{date}}</span>
+                    </td>
+                    <td class="scoreboard-categories">
+                        <span class="cell-meta">{{categories}}</span>
+                    </td>
+                </tr>
+            {{/scores}}
+        </tbody>
+    </table>
+</div>

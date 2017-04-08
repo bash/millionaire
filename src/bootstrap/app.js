@@ -16,6 +16,7 @@ const finishGame = require('../handlers/finish-game')
 const login = require('../handlers/login')
 const getAuthState = require('../handlers/get-auth-state')
 const createCategory = require('../handlers/create-category')
+const getScoreboard = require('../handlers/get-scoreboard')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -24,6 +25,7 @@ const { answerQuestion: _answerQuestionCommand } = require('../commands/answer-q
 const _finishGameCommand = require('../commands/finish-game')
 const _verifyLogin = require('../queries/verify-login')
 const _createCategoryCommand = require('../commands/create-category')
+const _getScoreboardQuery = require('../queries/get-scoreboard')
 
 /**
  *
@@ -40,6 +42,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const answerQuestionCommand = _answerQuestionCommand(repository, dataStore, finishGameCommand)
   const verifyLogin = _verifyLogin(backendRepository)
   const createCategoryCommand = _createCategoryCommand(backendRepository)
+  const getScoreboardQuery = _getScoreboardQuery(repository)
 
   const app = new Application()
 
@@ -59,6 +62,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(post('/api/login', login(verifyLogin)))
   app.use(get('/api/auth', getAuthState()))
   app.use(post('/api/categories', createCategory(createCategoryCommand)))
+  app.use(get('/api/scoreboard', getScoreboard(getScoreboardQuery)))
 
   return app
 }

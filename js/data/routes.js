@@ -34,12 +34,20 @@ const routes = [
     loader: gameLoader()
   },
   {
+    route: new Route('/coffee'),
+    loader: staticLoader('coffee')
+  },
+  {
     route: new Route('/score/@gameId'),
     loader: scoreLoader()
   },
   {
     route: new Route('/login'),
     loader: staticLoader('login')
+  },
+  {
+    route: new Route('/scoreboard'),
+    loader: scoreboardLoader('scoreboard')
   },
   {
     route: new Route('/admin'),

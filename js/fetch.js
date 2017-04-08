@@ -135,3 +135,11 @@ export function createCategory (name) {
 
   return fetch('/categories', { method: 'POST', body })
 }
+
+/**
+ *
+ * @returns {Promise}
+ */
+export function fetchScoreboard () {
+  return fetch('/scoreboard')
+}
