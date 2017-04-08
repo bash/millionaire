@@ -4,7 +4,7 @@
  * @param {number} ttl
  * @returns {ToastMessage}
  */
-export function createToastMessage(message, ttl = 4000) {
+export function createToastMessage (message, ttl = 4000) {
   const $message = new ToastMessage()
 
   $message.toastTtl = ttl
@@ -50,23 +50,22 @@ export function hideCurrentToast () {
   return toast ? toast.hide() : Promise.resolve()
 }
 
-/**
- * @type {Element}
- */
-let _toastContainer
+const getToastContainer = (() => {
+  let toastContainer
 
-function getToastContainer () {
-  if (_toastContainer) {
-    return _toastContainer
+  return () => {
+    if (toastContainer) {
+      return toastContainer
+    }
+
+    toastContainer = document.createElement('section')
+    toastContainer.className = 'toast-container'
+
+    document.body.appendChild(toastContainer)
+
+    return toastContainer
   }
-
-  _toastContainer = document.createElement('section')
-  _toastContainer.className = 'toast-container'
-
-  document.body.appendChild(_toastContainer)
-
-  return _toastContainer
-}
+})()
 
 export class ToastMessage extends HTMLElement {
   constructor () {
@@ -135,7 +134,7 @@ export class ToastMessage extends HTMLElement {
    * @returns {number}
    */
   get toastTtl () {
-    return Number.parseInt(this.getAttribute('toast-ttl')) || null;
+    return Number.parseInt(this.getAttribute('toast-ttl')) || null
   }
 
   /**
