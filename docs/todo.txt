@@ -1,3 +1,0 @@
-[] Show errors in register form
-[] Show more details on game info page
-[] Color picker

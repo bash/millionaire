@@ -18,6 +18,8 @@ const getAuthState = require('../handlers/get-auth-state')
 const createCategory = require('../handlers/create-category')
 const getScoreboard = require('../handlers/get-scoreboard')
 const hideScoreboardEntry = require('../handlers/hide-scoreboard-entry')
+const getQuestions = require('../handlers/get-questions')
+const getQuestion = require('../handlers/get-question')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -28,6 +30,8 @@ const _verifyLogin = require('../queries/verify-login')
 const _createCategoryCommand = require('../commands/create-category')
 const _getScoreboardQuery = require('../queries/get-scoreboard')
 const _hideScoreboardEntryCommand = require('../commands/hide-scoreboard-entry')
+const _getQuestionsQuery = require('../queries/get-questions')
+const _getQuestionQuery = require('../queries/get-question')
 
 /**
  *
@@ -46,6 +50,8 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const createCategoryCommand = _createCategoryCommand(backendRepository)
   const getScoreboardQuery = _getScoreboardQuery(repository)
   const hideScoreboardEntryCommand = _hideScoreboardEntryCommand(backendRepository)
+  const getQuestionsQuery = _getQuestionsQuery(backendRepository)
+  const getQuestionQuery = _getQuestionQuery(backendRepository)
 
   const app = new Application()
 
@@ -57,7 +63,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(get('/api/game', getCurrentGame(repository, dataStore)))
   app.use(get('/api/categories', getCategories(repository)))
   app.use(post('/api/games', createGame(repository, createGameCommand)))
-  app.use(get('/api/games/:id', getGame(repository)))
+  app.use(get('/api/games/:id([0-9]+)', getGame(repository)))
   app.use(get('/api/game/question', getCurrentQuestion(getCurrentQuestionQuery)))
   app.use(post('/api/game/joker', useJoker(useJokerCommand)))
   app.use(post('/api/game/answer', answerQuestion(answerQuestionCommand)))
@@ -66,7 +72,9 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(get('/api/auth', getAuthState()))
   app.use(post('/api/categories', createCategory(createCategoryCommand)))
   app.use(get('/api/scoreboard', getScoreboard(getScoreboardQuery)))
-  app.use(post('/api/scoreboard/:id/hidden', hideScoreboardEntry(hideScoreboardEntryCommand)))
+  app.use(post('/api/scoreboard/:id([0-9]+)/hidden', hideScoreboardEntry(hideScoreboardEntryCommand)))
+  app.use(get('/api/questions', getQuestions(getQuestionsQuery)))
+  app.use(get('/api/questions/:id([0-9]+)', getQuestion(getQuestionQuery)))
 
   return app
 }

@@ -24,4 +24,4 @@ DELETE			-> /scores/:id
 [x] GET				-> /game/question
 [x] POST		    -> /game/joker
 [x] POST			-> /game/answer
-[ ] POST			-> /game/finish
+[x] POST			-> /game/finish
