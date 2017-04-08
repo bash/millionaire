@@ -2,10 +2,12 @@ import { loginAction } from '../actions/login'
 import { EventName } from '../data/event'
 import { createToastMessage } from './toast-message'
 import { registerAction } from '../actions/register'
+import { createCategoryAction } from '../actions/create-category'
 
 const actions = {
   'login': loginAction,
-  'register': registerAction
+  'register': registerAction,
+  'create-category': createCategoryAction
 }
 
 export class AppForm extends window.HTMLFormElement {

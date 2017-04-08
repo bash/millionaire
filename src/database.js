@@ -34,7 +34,7 @@ module.exports.transaction = function transaction (pool, executor) {
  * @param {Array} params
  * @returns {Promise<{}>}
  */
-module.exports.fetchOne = async function fetchOne (pool, query, params) {
+module.exports.queryOne = async function fetchOne (pool, query, params) {
   const result = await pool.query(query, params)
 
   return result.rows[0]
@@ -47,7 +47,7 @@ module.exports.fetchOne = async function fetchOne (pool, query, params) {
  * @param {Array} params
  * @returns {Promise<Array<{}>>}
  */
-module.exports.fetchMany = async function fetchMany (pool, query, params) {
+module.exports.query = async function fetchMany (pool, query, params) {
   const result = await pool.query(query, params)
 
   return result.rows

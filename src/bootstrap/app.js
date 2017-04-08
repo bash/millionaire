@@ -15,6 +15,7 @@ const answerQuestion = require('../handlers/answer-question')
 const finishGame = require('../handlers/finish-game')
 const login = require('../handlers/login')
 const getAuthState = require('../handlers/get-auth-state')
+const createCategory = require('../handlers/create-category')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -22,6 +23,7 @@ const { useJoker: _useJokerCommand } = require('../commands/use-joker')
 const { answerQuestion: _answerQuestionCommand } = require('../commands/answer-question')
 const _finishGameCommand = require('../commands/finish-game')
 const _verifyLogin = require('../queries/verify-login')
+const _createCategoryCommand = require('../commands/create-category')
 
 /**
  *
@@ -37,6 +39,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const finishGameCommand = _finishGameCommand(repository, dataStore)
   const answerQuestionCommand = _answerQuestionCommand(repository, dataStore, finishGameCommand)
   const verifyLogin = _verifyLogin(backendRepository)
+  const createCategoryCommand = _createCategoryCommand(backendRepository)
 
   const app = new Application()
 
@@ -55,6 +58,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(post('/api/game/finish', finishGame(finishGameCommand)))
   app.use(post('/api/login', login(verifyLogin)))
   app.use(get('/api/auth', getAuthState()))
+  app.use(post('/api/categories', createCategory(createCategoryCommand)))
 
   return app
 }

@@ -1,4 +1,4 @@
-const { transaction, fetchOne, fetchMany } = require('./../database')
+const { transaction, queryOne, query } = require('./../database')
 const { toTimestamp } = require('./../helpers/date')
 
 // TODO: should rename to GameRepository, create separate repository for admin
@@ -12,7 +12,7 @@ module.exports = class Repository {
    * @returns {Promise<Array<{id: number, name: string}>>}
    */
   async getCategories () {
-    const result = await this._pool.query('SELECT * FROM mill.category')
+    const result = await this._pool.query('SELECT * FROM mill.category ORDER BY name')
 
     return result.rows.map(({ id, name }) => {
       return { id: id, name }
@@ -143,7 +143,7 @@ module.exports = class Repository {
    * @returns {Promise<{}>}
    */
   async getQuestionById (id) {
-    const questionQuery = fetchOne(
+    const questionQuery = queryOne(
       this._pool,
       `SELECT
          question.id,
@@ -155,13 +155,13 @@ module.exports = class Repository {
       [id]
     )
 
-    const statQuery = fetchOne(
+    const statQuery = queryOne(
       this._pool,
       'SELECT correct_answer_rate FROM mill.question_stat WHERE id = $1::bigint',
       [id]
     )
 
-    const answersQuery = fetchMany(
+    const answersQuery = query(
       this._pool,
       `SELECT id, title FROM mill.answer WHERE question_id = $1::bigint`,
       [id]
@@ -199,7 +199,7 @@ module.exports = class Repository {
    * @returns {Promise<{}>}
    */
   async getCorrectAnswer (questionId) {
-    return fetchOne(
+    return queryOne(
       this._pool,
       `SELECT id FROM mill.answer
        WHERE question_id = $1::bigint AND is_correct = TRUE`,

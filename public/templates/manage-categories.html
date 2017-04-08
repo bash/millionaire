@@ -10,13 +10,24 @@
 <div class="page-content">
 
 
+    <section class="form-group">
+        <h2 class="title">Neue Kategorie erstellen</h2>
 
-    <ul>
-        {{#categories}}
-            <li>
-                {{name}}
-            </li>
-        {{/categories}}
-    </ul>
+        <form is="app-form" form-action="create-category">
+            <div class="input-group">
+                <input type="text" name="name" placeholder="Name" autocomplete="off" class="basic-input input"  />
+                <button type="submit" class="basic-button">Erstellen</button>
+            </div>
+        </form>
+    </section>
 
+    <section class="form-group">
+        <ul>
+            {{#categories}}
+                <li>
+                    {{name}}
+                </li>
+            {{/categories}}
+        </ul>
+    </section>
 </div>

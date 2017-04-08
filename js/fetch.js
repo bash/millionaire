@@ -124,3 +124,14 @@ export function login (username, password) {
 export function fetchAuthState () {
   return fetch('/auth')
 }
+
+/**
+ *
+ * @param {string} name
+ * @returns {Promise}
+ */
+export function createCategory (name) {
+  const body = params({ name })
+
+  return fetch('/categories', { method: 'POST', body })
+}
