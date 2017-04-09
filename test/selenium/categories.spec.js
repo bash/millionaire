@@ -1,39 +1,31 @@
 const assert = require('assert')
 const webdriver = require('selenium-webdriver')
 const test = require('selenium-webdriver/testing')
-const helper = require('./selenium-helper')
+const helper = require('./helper')
+const bootstrapDb = require('../../src/bootstrap/database')
 
 const until = webdriver.until
 const By = webdriver.By
 
-test.describe('Admin Backend', () => {
+test.describe('Categories', () => {
+  let login = helper.login()
   let driver
+  let pool
 
   test.before(() => {
     driver = helper.getDriver()
+    pool = bootstrapDb()
+    login.before()
   })
 
   test.after(() => {
+    login.after()
     driver.quit()
-  })
-
-  test.it('should be able to log in', () => {
-    driver.get(`${helper.baseUrl}/login`)
-
-    const username = driver.wait(until.elementLocated(By.name('username')))
-    username.sendKeys('admin')
-
-    const password = driver.wait(until.elementLocated(By.name('password')))
-    password.sendKeys('backe backe kuchen')
-
-    const button = driver.findElement(By.css('button[type="submit"]'))
-
-    button.click()
-
-    const admin = driver.wait(until.urlIs(`${helper.baseUrl}/admin`), 5000)
+    pool.query('DELETE FROM mill.category WHERE name = \'Selenium Test\'')
   })
 
   test.it('should be able to create category', () => {
+    login.run(driver)
     driver.get(`${helper.baseUrl}/admin/categories`)
 
     const name = driver.wait(until.elementLocated(By.name('name')))
