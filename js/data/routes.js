@@ -6,6 +6,7 @@ import { authenticatedLoader } from '../loaders/authenticated-loader'
 import { categoriesLoader } from '../loaders/categories-loader'
 import { scoreboardLoader } from '../loaders/scoreboard-loader'
 import { questionsLoader } from '../loaders/questions-loader'
+import { newQuestionLoader } from '../loaders/new-question'
 
 export const gameScore = (gameId) => `/score/${gameId}`
 
@@ -60,6 +61,10 @@ const routes = [
   {
     route: new Route('/admin/questions'),
     loader: authenticatedLoader(questionsLoader())
+  },
+  {
+    route: new Route('/admin/questions/new'),
+    loader: authenticatedLoader(newQuestionLoader())
   },
   {
     route: new Route('/admin/scoreboard'),

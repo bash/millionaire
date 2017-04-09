@@ -8,26 +8,31 @@
 </nav>
 
 <div class="page-content">
+    <section class="form-group">
+        <a href="/admin/questions/new" is="app-link" class="basic-button -small">Neue Frage erstellen</a>
+    </section>
 
-    <ul class="questions-list">
-        {{#questions}}
-            <li class="cell-meta">{{category_name}}</li>
-            <li class="question">
-                <div class="title">
-                    {{title}}
-                </div>
+    <section class="form-group">
+        <ul class="questions-list">
+            {{#questions}}
+                <li class="cell-meta">{{category_name}}</li>
+                <li class="question">
+                    <div class="title">
+                        {{title}}
+                    </div>
 
-                <div class="buttons">
-                    <a href="/admin/questions/{{id}}" class="basic-button -small" is="app-link">
-                        bearbeiten
-                    </a>
+                    <div class="buttons">
+                        <a href="/admin/questions/{{id}}" class="basic-button -small" is="app-link">
+                            bearbeiten
+                        </a>
 
-                    <form is="app-form" form-action="delete-question">
-                        <input type="hidden" name="question_id" value="{{id}}" />
-                        <button type="submit" class="basic-button -small">löschen</button>
-                    </form>
-                </div>
-            </li>
-        {{/questions}}
-    </ul>
+                        <form is="app-form" form-action="delete-question">
+                            <input type="hidden" name="question_id" value="{{id}}" />
+                            <button type="submit" class="basic-button -small">löschen</button>
+                        </form>
+                    </div>
+                </li>
+            {{/questions}}
+        </ul>
+    </section>
 </div>

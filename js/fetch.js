@@ -1,3 +1,10 @@
+import { url } from './helpers/url'
+
+/**
+ *
+ * @param {Response} resp
+ * @returns {Response|Promise}
+ */
 const rejectHttpError = (resp) => {
   if (resp.ok) {
     return resp
@@ -16,22 +23,6 @@ const fetch = (url, options = {}) => {
   return window.fetch(`/api${url}`, Object.assign({ credentials: 'include' }, options))
     .then((resp) => rejectHttpError(resp))
     .then((resp) => resp.json())
-}
-
-/**
- *
- * @param {Array<string>} strings
- * @param {Array<string>} values
- * @returns {string}
- */
-const url = (strings, ...values) => {
-  const reducer = (result, string, i) => {
-    let value = values[i] == null ? '' : values[i]
-
-    return `${result}${string}${encodeURIComponent(value)}`
-  }
-
-  return strings.reduce(reducer, '')
 }
 
 /**
@@ -201,4 +192,16 @@ export function fetchQuestion (id) {
  */
 export function deleteQuestion (id) {
   return fetch(url`/questions/${id}`, { method: 'DELETE' })
+}
+
+/**
+ *
+ * @param {string} category
+ * @param {string} title
+ * @param {Array<string>} answers
+ */
+export function createQuestion (category, title, answers) {
+  const body = params({ category, title, answers })
+
+  return fetch('/questions', { method: 'POST', body })
 }
