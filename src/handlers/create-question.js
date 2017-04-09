@@ -1,4 +1,5 @@
 const HttpError = require('../http/http-error')
+const { requireAdmin } = require('../helpers/auth')
 
 /**
  *
@@ -7,6 +8,8 @@ const HttpError = require('../http/http-error')
  */
 module.exports = function (createQuestion) {
   return async (ctx) => {
+    requireAdmin(ctx)
+
     const title = ctx.request.body.title
     const answers = ctx.request.body.answers
     const categoryId = ctx.request.body.category_id
