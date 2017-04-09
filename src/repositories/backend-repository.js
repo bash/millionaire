@@ -1,6 +1,5 @@
 const { queryOne, query, transaction } = require('./../database')
 
-// TODO: should rename to GameRepository, create separate repository for admin
 module.exports = class BackendRepository {
   constructor (pool) {
     this._pool = pool
@@ -57,19 +56,29 @@ module.exports = class BackendRepository {
   /**
    *
    * @param {string} questionId
-   * @returns {Promise<Array>}
+   * @returns {Promise<{}>}
    */
-  getQuestion (questionId) {
-    return queryOne(
+  async getQuestion (questionId) {
+    const question = await queryOne(
       this._pool,
       `SELECT question.id,
               question.title,
+              category.id as category_id,
               category.name as category_name
        FROM mill.question AS question
        JOIN mill.category AS category ON question.category_id = category.id
        WHERE question.id = $1::bigint`,
       [questionId]
     )
+
+    return {
+      id: question.id,
+      title: question.title,
+      category: {
+        id: question.category_id,
+        name: question.category_name,
+      }
+    }
   }
 
   /**
@@ -82,7 +91,8 @@ module.exports = class BackendRepository {
       this._pool,
       `SELECT id, title, is_correct
        FROM mill.answer
-       WHERE question_id = $1::bigint`,
+       WHERE question_id = $1::bigint
+       ORDER BY is_correct DESC`,
       [questionId]
     )
   }
@@ -144,5 +154,36 @@ module.exports = class BackendRepository {
 
       return question.id
     })
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @param {string} title
+   * @returns {Promise}
+   */
+  updateAnswerTitle (id, title) {
+    return this._pool.query(
+      `UPDATE mill.answer
+       SET title = $1::varchar(255)
+       WHERE id = $2::bigint`,
+      [title, id]
+    )
+  }
+
+  /**
+   *
+   * @param {string} id
+   * @param {string} category
+   * @param {string} title
+   * @returns {Promise}
+   */
+  updateQuestion (id, category, title) {
+    return this._pool.query(
+      `UPDATE mill.question
+       SET category_id = $1::bigint, title = $2::varchar(255)
+       WHERE id = $3::bigint`,
+      [category, title, id]
+    )
   }
 }

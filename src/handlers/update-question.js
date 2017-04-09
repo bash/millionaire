@@ -3,15 +3,14 @@ const { requireAdmin } = require('../helpers/auth')
 
 /**
  *
- * @param {(function(*, *, *))} createQuestion
+ * @param {(function(*, *, *))} updateQuestion
  * @returns {(function(*):Promise)}
  */
-module.exports = function (createQuestion) {
-  return async (ctx) => {
+module.exports = function (updateQuestion) {
+  return async (ctx, id) => {
     requireAdmin(ctx)
 
     const title = ctx.request.body.title
-    const answers = ctx.request.body.answers
     const categoryId = ctx.request.body.category_id
 
     if (title == null) {
@@ -22,17 +21,13 @@ module.exports = function (createQuestion) {
       throw new HttpError(400, { error: 'missing parameter category_id' })
     }
 
-    if (!Array.isArray(answers)) {
-      throw new HttpError(400, { error: 'answers must be an array' })
-    }
-
-    // TODO: convert CreateQuestionError to HttpError
-    const id = await createQuestion(
+    // TODO: convert UpdateQuestionError to HttpError
+    await updateQuestion(
+      id,
       categoryId,
-      title.trim(),
-      answers.map((answer) => answer.trim())
+      title.trim()
     )
 
-    ctx.body = { id }
+    ctx.body = { updated: true }
   }
 }

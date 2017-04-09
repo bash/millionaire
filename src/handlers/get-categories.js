@@ -5,6 +5,11 @@
  */
 module.exports = function (repository) {
   return async (ctx) => {
-    ctx.body = await repository.getCategories()
+    // TODO: remove direct access to repository -> use query instead
+    if (ctx.query['has_questions'] === '1') {
+      ctx.body = await repository.getCategoriesWithQuestions()
+    } else {
+      ctx.body = await repository.getCategories()
+    }
   }
 }

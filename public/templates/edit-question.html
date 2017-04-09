@@ -1,0 +1,51 @@
+<app-header></app-header>
+
+<!-- TODO: we need a reusable partial for this -->
+<nav class="nav-bar">
+    <a href="/admin/categories" is="app-link" class="item">Kategorien</a>
+    <a href="/admin/questions" is="app-link" class="item -current">Fragen</a>
+    <a href="/admin/scoreboard" is="app-link" class="item">Scoreboard</a>
+</nav>
+
+
+<div class="page-content">
+    <form is="app-form" form-action="update-question" autocomplete="off">
+
+        <input type="hidden" name="question_id" value="{{question.id}}">
+
+        <section class="form-group">
+            <label class="title" for="category">Kategorie</label>
+
+            <select name="category" id="category" class="basic-input">
+                {{#categories}}
+                    <option value="{{id}}" {{#isActive}}selected{{/isActive}}>{{name}}</option>
+                {{/categories}}
+            </select>
+        </section>
+
+        <section class="form-group">
+            <label class="title" for="title">Frage</label>
+
+            <input type="text" name="title" value="{{question.title}}" id="title" class="basic-input" placeholder="Frage?">
+        </section>
+
+        {{#answers}}
+            <section class="form-group">
+                <label class="title" for="answer-{{i}}">
+                    {{#is_correct}}
+                        Richtige Antwort
+                    {{/is_correct}}
+                    {{^is_correct}}
+                        {{n}}. Antwort
+                    {{/is_correct}}
+                </label>
+                <input type="hidden" name="answer_id" value="{{id}}" />
+                <input type="text" name="answer_title" value="{{title}}" id="answer-{{i}}" class="basic-input" placeholder="Antwort">
+            </section>
+        {{/answers}}
+
+        <section class="form-group">
+            <button type="submit" class="basic-button">Speichern</button>
+        </section>
+    </form>
+</div>

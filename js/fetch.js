@@ -57,8 +57,10 @@ export function fetchCurrentGame () {
  *
  * @returns {Promise<Array<{id: number, name: string}>>}
  */
-export function fetchCategories () {
-  return fetch('/categories')
+export function fetchCategories ({ hasQuestions = false} = {}) {
+  const query = hasQuestions ? '?has_questions=1' : ''
+
+  return fetch(`/categories${query}`)
 }
 
 /**
@@ -205,3 +207,27 @@ export function createQuestion (category, title, answers) {
 
   return fetch('/questions', { method: 'POST', body })
 }
+
+/**
+ *
+ * @param {string} id
+ * @param {string} category
+ * @param {string} title
+ */
+export function updateQuestion (id, category, title) {
+  const body = params({ category_id: category, title })
+
+  return fetch(url`/questions/${id}`, { method: 'PATCH', body })
+}
+
+/**
+ *
+ * @param {string} id
+ * @param {string} title
+ */
+export function updateAnswer (id, title) {
+  const body = params({ title })
+
+  return fetch(url`/answers/${id}/title`, { method: 'PUT', body })
+}
+

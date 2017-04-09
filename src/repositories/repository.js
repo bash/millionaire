@@ -1,7 +1,6 @@
 const { transaction, queryOne, query } = require('./../database')
 const { toTimestamp } = require('./../helpers/date')
 
-// TODO: should rename to GameRepository, create separate repository for admin
 module.exports = class Repository {
   constructor (pool) {
     this._pool = pool
@@ -13,6 +12,23 @@ module.exports = class Repository {
    */
   async getCategories () {
     const result = await this._pool.query('SELECT * FROM mill.category ORDER BY name')
+
+    return result.rows.map(({ id, name }) => {
+      return { id: id, name }
+    })
+  }
+
+  /**
+   *
+   * @returns {Promise<Array<{id: number, name: string}>>}
+   */
+  async getCategoriesWithQuestions () {
+    const result = await this._pool.query(
+      `SELECT category.* FROM mill.category AS category
+       JOIN mill.question AS question ON category.id = question.category_id
+       GROUP BY category.id
+       ORDER BY category.name`
+    )
 
     return result.rows.map(({ id, name }) => {
       return { id: id, name }

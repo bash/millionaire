@@ -6,6 +6,7 @@ const HttpError = require('../http/http-error')
  */
 module.exports = function (repository) {
   return async (ctx, gameId) => {
+    // TODO: remove direct access to repository -> use query instead
     const game = await repository.getGameById(gameId)
 
     if (!game) {

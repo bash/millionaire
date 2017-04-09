@@ -1,5 +1,5 @@
 const Application = require('koa')
-const { del, get, post } = require('koa-route')
+const { patch, del, get, post, put } = require('koa-route')
 
 const bodyParser = require('koa-bodyparser')
 const session = require('../middlewares/session')
@@ -22,6 +22,8 @@ const getQuestions = require('../handlers/get-questions')
 const getQuestion = require('../handlers/get-question')
 const deleteQuestion = require('../handlers/delete-question')
 const createQuestion = require('../handlers/create-question')
+const updateQuestion = require('../handlers/update-question')
+const updateAnswerTitle = require('../handlers/update-answer-title')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -36,6 +38,8 @@ const _getQuestionsQuery = require('../queries/get-questions')
 const _getQuestionQuery = require('../queries/get-question')
 const _deleteQuestionCommand = require('../commands/delete-question')
 const _createQuestionCommand = require('../commands/create-question')
+const _updateQuestionCommand = require('../commands/update-question')
+const _updateAnswerTitleCommand = require('../commands/update-answer-title')
 
 /**
  *
@@ -58,6 +62,8 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const getQuestionQuery = _getQuestionQuery(backendRepository)
   const deleteQuestionCommand = _deleteQuestionCommand(backendRepository)
   const createQuestionCommand = _createQuestionCommand(repository, backendRepository)
+  const updateQuestionCommand = _updateQuestionCommand(repository, backendRepository)
+  const updateAnswerTitleCommand = _updateAnswerTitleCommand(backendRepository)
 
   const app = new Application()
 
@@ -83,6 +89,8 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(get('/api/questions/:id([0-9]+)', getQuestion(getQuestionQuery)))
   app.use(del('/api/questions/:id([0-9]+)', deleteQuestion(deleteQuestionCommand)))
   app.use(post('/api/questions', createQuestion(createQuestionCommand)))
+  app.use(patch('/api/questions/:id([0-9]+)', updateQuestion(updateQuestionCommand)))
+  app.use(put('/api/answers/:id([0-9]+)/title', updateAnswerTitle(updateAnswerTitleCommand)))
 
   return app
 }

@@ -4,6 +4,7 @@ import { hideScoreboardEntryAction } from '../actions/hide-scoreboard-entry'
 import { deleteQuestionAction } from '../actions/delete-question'
 import { loginAction } from '../actions/login'
 import { createQuestionAction } from '../actions/create-question'
+import { updateQuestionAction } from '../actions/update-question'
 
 export const actions = {
   'login': loginAction,
@@ -11,5 +12,6 @@ export const actions = {
   'create-category': createCategoryAction,
   'hide-scoreboard-entry': hideScoreboardEntryAction,
   'delete-question': deleteQuestionAction,
-  'create-question': createQuestionAction
+  'create-question': createQuestionAction,
+  'update-question': updateQuestionAction
 }

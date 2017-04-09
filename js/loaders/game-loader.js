@@ -2,7 +2,7 @@ import { fetchTemplate } from '../data/template'
 import { fetchCategories, fetchCurrentQuestion, fetchCurrentGame } from '../fetch'
 
 const fetchRegisterData = () => {
-  return fetchCategories()
+  return fetchCategories({ hasQuestions: true })
     .then((categories) => {
       return { categories }
     })

@@ -32,10 +32,14 @@ export class AppForm extends window.HTMLFormElement {
     const data = new FormData(this)
     const action = actions[this.formAction]
 
-    const { error, route } = await action(data)
+    const { error, route, toast} = await action(data)
 
     if (error) {
       await showToastMessage(error)
+    }
+
+    if (toast) {
+      await showToastMessage(toast)
     }
 
     if (route) {
