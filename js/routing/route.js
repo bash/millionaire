@@ -48,6 +48,6 @@ export class Route {
     const parts = path.split('/').slice(1)
 
     return createObjectFromArray(this._params
-      .map(([i, name]) => [name, parts[i]]))
+      .map(([i, name]) => [name, decodeURIComponent(parts[i])]))
   }
 }

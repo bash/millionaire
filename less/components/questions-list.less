@@ -1,0 +1,24 @@
+.questions-list {
+  > .question {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  > .question:not(:last-child) {
+    margin-bottom: 24px;
+  }
+
+  > .question > .title {
+    flex-grow: 1;
+  }
+
+  > .question > .buttons {
+    flex-shrink: 0;
+    padding-left: 12px;
+    display: flex;
+  }
+
+  > .question > .buttons > :not(:last-child) {
+    margin-right: 8px;
+  }
+}

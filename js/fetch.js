@@ -1,3 +1,11 @@
+const rejectHttpError = (resp) => {
+  if (resp.ok) {
+    return resp
+  } else {
+    return Promise.reject(new Error(`received http error code`))
+  }
+}
+
 /**
  *
  * @param {string} url
@@ -6,7 +14,24 @@
  */
 const fetch = (url, options = {}) => {
   return window.fetch(`/api${url}`, Object.assign({ credentials: 'include' }, options))
+    .then((resp) => rejectHttpError(resp))
     .then((resp) => resp.json())
+}
+
+/**
+ *
+ * @param {Array<string>} strings
+ * @param {Array<string>} values
+ * @returns {string}
+ */
+const url = (strings, ...values) => {
+  const reducer = (result, string, i) => {
+    let value = values[i] == null ? '' : values[i]
+
+    return `${result}${string}${encodeURIComponent(value)}`
+  }
+
+  return strings.reduce(reducer, '')
 }
 
 /**
@@ -100,7 +125,7 @@ export function finishGame () {
  * @param {string} gameId
  */
 export function fetchGame (gameId) {
-  return fetch(`/games/${encodeURIComponent(gameId)}`)
+  return fetch(url`/games/${gameId}`)
 }
 
 /**
@@ -150,5 +175,30 @@ export function fetchScoreboard () {
  * @returns {Promise}
  */
 export function hideScoreboardEntry (id) {
-  return fetch(`/scoreboard/${encodeURIComponent(id)}/hidden`, { method: 'POST' })
+  return fetch(url`/scoreboard/${id}/hidden`, { method: 'POST' })
+}
+
+/**
+ *
+ * @returns {Promise<Array>}
+ */
+export function fetchQuestions () {
+  return fetch('/questions')
+}
+
+/**
+ *
+ * @returns {Promise<{}>}
+ */
+export function fetchQuestion (id) {
+  return fetch(url`/questions/${id}`)
+}
+
+/**
+ *
+ * @param {string} id
+ * @returns {Promise<{}>}
+ */
+export function deleteQuestion (id) {
+  return fetch(url`/questions/${id}`, { method: 'DELETE' })
 }

@@ -1,17 +1,7 @@
-import { loginAction } from '../actions/login'
 import { EventName } from '../data/event'
 import { showToastMessage } from './toast-message'
-import { registerAction } from '../actions/register'
-import { createCategoryAction } from '../actions/create-category'
-import { hideScoreboardEntryAction } from '../actions/hide-scoreboard-entry'
 import { handleError } from '../error'
-
-const actions = {
-  'login': loginAction,
-  'register': registerAction,
-  'create-category': createCategoryAction,
-  'hide-scoreboard-entry': hideScoreboardEntryAction
-}
+import { actions } from '../data/actions'
 
 export class AppForm extends window.HTMLFormElement {
   constructor () {

@@ -1,5 +1,5 @@
 const Application = require('koa')
-const { get, post } = require('koa-route')
+const { del, get, post } = require('koa-route')
 
 const bodyParser = require('koa-bodyparser')
 const session = require('../middlewares/session')
@@ -20,6 +20,7 @@ const getScoreboard = require('../handlers/get-scoreboard')
 const hideScoreboardEntry = require('../handlers/hide-scoreboard-entry')
 const getQuestions = require('../handlers/get-questions')
 const getQuestion = require('../handlers/get-question')
+const deleteQuestion = require('../handlers/delete-question')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -32,6 +33,7 @@ const _getScoreboardQuery = require('../queries/get-scoreboard')
 const _hideScoreboardEntryCommand = require('../commands/hide-scoreboard-entry')
 const _getQuestionsQuery = require('../queries/get-questions')
 const _getQuestionQuery = require('../queries/get-question')
+const _deleteQuestionCommand = require('../commands/delete-question')
 
 /**
  *
@@ -52,6 +54,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const hideScoreboardEntryCommand = _hideScoreboardEntryCommand(backendRepository)
   const getQuestionsQuery = _getQuestionsQuery(backendRepository)
   const getQuestionQuery = _getQuestionQuery(backendRepository)
+  const deleteQuestionCommand = _deleteQuestionCommand(backendRepository)
 
   const app = new Application()
 
@@ -75,6 +78,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(post('/api/scoreboard/:id([0-9]+)/hidden', hideScoreboardEntry(hideScoreboardEntryCommand)))
   app.use(get('/api/questions', getQuestions(getQuestionsQuery)))
   app.use(get('/api/questions/:id([0-9]+)', getQuestion(getQuestionQuery)))
+  app.use(del('/api/questions/:id([0-9]+)', deleteQuestion(deleteQuestionCommand)))
 
   return app
 }

@@ -9,5 +9,25 @@
 
 <div class="page-content">
 
+    <ul class="questions-list">
+        {{#questions}}
+            <li class="cell-meta">{{category_name}}</li>
+            <li class="question">
+                <div class="title">
+                    {{title}}
+                </div>
 
+                <div class="buttons">
+                    <a href="/admin/questions/{{id}}" class="basic-button -small" is="app-link">
+                        bearbeiten
+                    </a>
+
+                    <form is="app-form" form-action="delete-question">
+                        <input type="hidden" name="question_id" value="{{id}}" />
+                        <button type="submit" class="basic-button -small">löschen</button>
+                    </form>
+                </div>
+            </li>
+        {{/questions}}
+    </ul>
 </div>

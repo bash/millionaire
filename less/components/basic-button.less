@@ -1,4 +1,5 @@
 .basic-button {
+  display: inline-block;
   padding: 18px 64px;
   border: 4px solid var(--brand-color);
   border-radius: var(--box-border-radius);
@@ -13,7 +14,8 @@
     border-width: 3px;
   }
 
-  &:enabled {
+  &:enabled,
+  &:any-link {
     cursor: pointer;
     opacity: @idle-opacity;
   }
@@ -23,11 +25,14 @@
   }
 
   &:enabled:hover,
-  &:enabled:focus {
+  &:enabled:focus,
+  &:any-link:hover,
+  &:any-link:hover {
     opacity: @hover-opacity;
   }
 
-  &:enabled:active {
+  &:enabled:active,
+  &:any-link:active {
     opacity: @active-opacity;
   }
 }

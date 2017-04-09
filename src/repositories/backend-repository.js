@@ -49,7 +49,8 @@ module.exports = class BackendRepository {
               question.title,
               category.name as category_name
        FROM mill.question AS question
-       JOIN mill.category AS category ON question.category_id = category.id`
+       JOIN mill.category AS category ON question.category_id = category.id
+       ORDER BY category.name`
     )
   }
 
@@ -95,8 +96,21 @@ module.exports = class BackendRepository {
     return this._pool.query(
       `UPDATE mill.score
        SET hidden = TRUE
-       WHERE id = $1::bigint`
+       WHERE id = $1::bigint`,
       [scoreId]
+    )
+  }
+
+  /**
+   *
+   * @param {string} questionId
+   * @returns {Promise}
+   */
+  deleteQuestion (questionId) {
+    return this._pool.query(
+      `DELETE FROM mill.question
+       WHERE id = $1::bigint`,
+      [questionId]
     )
   }
 }
