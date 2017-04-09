@@ -24,17 +24,19 @@ module.exports.login = function () {
   let pool
 
   return {
-    before () {
+    async before () {
       pool = bootstrapDb()
 
-      return pool.query('INSERT INTO mill.admin (username, password) VALUES($1::varchar(255), $2::varchar(255))', [
+      await pool.query('DELETE FROM mill.admin WHERE username = $1::varchar(255)', [USERNAME])
+
+      await pool.query('INSERT INTO mill.admin (username, password) VALUES($1::varchar(255), $2::varchar(255))', [
         USERNAME,
         PASSWORD_HASH
       ])
     },
 
-    after () {
-      pool.query('DELETE FROM mill.admin WHERE username = $1::varchar(255)', [USERNAME])
+    async after () {
+      await pool.query('DELETE FROM mill.admin WHERE username = $1::varchar(255)', [USERNAME])
     },
 
     /**
@@ -51,7 +53,6 @@ module.exports.login = function () {
       password.sendKeys(PASSWORD)
 
       const button = driver.findElement(By.css('button[type="submit"]'))
-
       button.click()
 
       const admin = driver.wait(until.urlIs(`${BASE_URL}/admin`), 5000)

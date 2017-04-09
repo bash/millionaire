@@ -12,24 +12,70 @@ test.describe('Questions', () => {
   let driver
   let pool
   let categoryId
+  let questionId
 
   test.before(function *() {
+    this.timeout(5000)
+
     driver = helper.getDriver()
     pool = bootstrapDb()
 
     yield login.before()
     yield login.run(driver)
 
-    const result = yield pool.query('INSERT INTO mill.category (name) VALUES (\'Selenium\') RETURNING id')
+    const result = yield pool.query('INSERT INTO mill.category (name) VALUES ($1::varchar(255)) RETURNING id', [
+      `Selenium ${Date.now()}`
+    ])
 
     categoryId = result.rows[0].id
   })
 
   test.after(function *() {
-    login.after()
-    driver.quit()
+    this.timeout(5000)
+
+    yield login.after()
+
+    yield driver.quit()
 
     yield pool.query('DELETE FROM mill.category WHERE id = $1::bigint', [categoryId])
+  })
+
+  test.it('can create a new question', function *() {
+    driver.get(`${helper.baseUrl}/admin/questions/new`)
+
+    const category = driver.wait(until.elementLocated(By.css(`option[value="${categoryId}"]`)))
+    category.click()
+
+    const questionTitle = `Selenium ${Date.now()}`
+
+    const title = driver.wait(until.elementLocated(By.name('title')))
+    title.sendKeys(questionTitle)
+
+    const answer0 = driver.wait(until.elementLocated(By.id('answer-0')))
+    answer0.sendKeys('Foo')
+
+    const answer1 = driver.wait(until.elementLocated(By.id('answer-1')))
+    answer1.sendKeys('Bar')
+
+    const answer2 = driver.wait(until.elementLocated(By.id('answer-2')))
+    answer2.sendKeys('Baz')
+
+    const answer3 = driver.wait(until.elementLocated(By.id('answer-3')))
+    answer3.sendKeys('Qux')
+
+    const button = driver.findElement(By.css('button[type="submit"]'))
+
+    button.click()
+
+    yield driver.wait(until.stalenessOf(title))
+
+    const result = yield pool.query('SELECT id FROM mill.question WHERE title = $1::varchar(255)', [
+      questionTitle
+    ])
+
+    questionId = result.rows[0].id
+
+    yield driver.wait(until.urlIs(`${helper.baseUrl}/admin/questions/${questionId}`))
   })
 
   test.it('should redirect to edit page', () => {
@@ -43,24 +89,12 @@ test.describe('Questions', () => {
     href.then((href) => driver.wait(until.urlIs(href)))
   })
 
-  test.it('should be able to delete question', function *() {
+  test.it('should be able to delete question', () => {
     driver.get(`${helper.baseUrl}/admin/questions`)
 
-    const result = yield pool.query('INSERT INTO mill.question (title, category_id) VALUES($1::varchar(255), $2::bigint) RETURNING id', [
-      'Test?',
-      categoryId
-    ])
-
-    const id = result.rows[0].id
-
-    const button = driver.wait(until.elementLocated(By.css(`[name="question_id"][value="${id}"] ~ button`)))
-
+    const button = driver.wait(until.elementLocated(By.css(`[name="question_id"][value="${questionId}"] ~ button`)))
     button.click()
 
-    yield driver.wait(until.stalenessOf(driver.findElement(By.css('app-view'))))
-
-    const testResult = yield pool.query('SELECT 1 FROM mill.question WHERE id = $1::bigint', [id])
-
-    assert.ok(testResult.rows.length === 0)
+    driver.wait(until.stalenessOf(button))
   })
 })

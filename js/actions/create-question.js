@@ -28,6 +28,6 @@ export async function createQuestionAction (form) {
   const { id } = await createQuestion(category, title, answers)
 
   return {
-    route: url`/admin/question/${id}`
+    route: url`/admin/questions/${id}`
   }
 }
