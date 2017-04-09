@@ -14,7 +14,7 @@ module.exports = function (repository, backendRepository) {
   return async (categoryId, title, _answers) => {
     const hasCategory = await repository.hasCategory(categoryId)
 
-    if (title.length === 1) {
+    if (title.length === 0) {
       throw new CreateQuestionError('title must not be empty')
     }
 

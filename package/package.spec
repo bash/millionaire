@@ -1,5 +1,5 @@
 Name: millionaire
-Version: 0.1.11
+Version: 0.1.12
 Release: 1
 Summary: Millionaire
 License: AGPL
