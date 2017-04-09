@@ -1,4 +1,4 @@
-const { queryOne, query } = require('./../database')
+const { queryOne, query, transaction } = require('./../database')
 
 // TODO: should rename to GameRepository, create separate repository for admin
 module.exports = class BackendRepository {
@@ -112,5 +112,37 @@ module.exports = class BackendRepository {
        WHERE id = $1::bigint`,
       [questionId]
     )
+  }
+
+  /**
+   *
+   * @param {string} categoryId
+   * @param {string} title
+   * @param {Array<{}>} answers
+   * @returns {Promise<string>}
+   */
+  createQuestion (categoryId, title, answers) {
+    return transaction(this._pool, async (client) => {
+      const question = await queryOne(
+        client,
+        `INSERT INTO mill.question (title, category_id)
+         VALUES ($1::varchar(255), $2::bigint)
+         RETURNING id`,
+        [title, categoryId]
+      )
+
+      const answerResults = answers.map(({ title, isCorrect }) => {
+        return query(
+          client,
+          `INSERT INTO mill.answer (title, is_correct, question_id)
+           VALUES ($1::varchar(255), $2::boolean, $3::bigint)`,
+          [title, isCorrect, question.id]
+        )
+      })
+
+      await Promise.all(answerResults)
+
+      return question.id
+    })
   }
 }

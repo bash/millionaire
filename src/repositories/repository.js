@@ -21,7 +21,7 @@ module.exports = class Repository {
 
   /**
    *
-   * @param {number} categoryId
+   * @param {string} categoryId
    * @returns {Promise<boolean>}
    */
   async hasCategory (categoryId) {

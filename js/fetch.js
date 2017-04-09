@@ -201,7 +201,7 @@ export function deleteQuestion (id) {
  * @param {Array<string>} answers
  */
 export function createQuestion (category, title, answers) {
-  const body = params({ category, title, answers })
+  const body = params({ category_id: category, title, answers })
 
   return fetch('/questions', { method: 'POST', body })
 }

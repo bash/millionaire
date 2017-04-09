@@ -21,6 +21,7 @@ const hideScoreboardEntry = require('../handlers/hide-scoreboard-entry')
 const getQuestions = require('../handlers/get-questions')
 const getQuestion = require('../handlers/get-question')
 const deleteQuestion = require('../handlers/delete-question')
+const createQuestion = require('../handlers/create-question')
 
 const _createGameCommand = require('../commands/create-game')
 const _getCurrentQuestionQuery = require('../queries/get-current-question')
@@ -34,6 +35,7 @@ const _hideScoreboardEntryCommand = require('../commands/hide-scoreboard-entry')
 const _getQuestionsQuery = require('../queries/get-questions')
 const _getQuestionQuery = require('../queries/get-question')
 const _deleteQuestionCommand = require('../commands/delete-question')
+const _createQuestionCommand = require('../commands/create-question')
 
 /**
  *
@@ -55,6 +57,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   const getQuestionsQuery = _getQuestionsQuery(backendRepository)
   const getQuestionQuery = _getQuestionQuery(backendRepository)
   const deleteQuestionCommand = _deleteQuestionCommand(backendRepository)
+  const createQuestionCommand = _createQuestionCommand(repository, backendRepository)
 
   const app = new Application()
 
@@ -79,6 +82,7 @@ module.exports = function bootstrapApp (repository, backendRepository, dataStore
   app.use(get('/api/questions', getQuestions(getQuestionsQuery)))
   app.use(get('/api/questions/:id([0-9]+)', getQuestion(getQuestionQuery)))
   app.use(del('/api/questions/:id([0-9]+)', deleteQuestion(deleteQuestionCommand)))
+  app.use(post('/api/questions', createQuestion(createQuestionCommand)))
 
   return app
 }

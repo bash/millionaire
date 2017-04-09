@@ -29,7 +29,7 @@ module.exports.transaction = function transaction (pool, executor) {
 
 /**
  *
- * @param {PG} pool
+ * @param {*} pool
  * @param {string} query
  * @param {Array} params
  * @returns {Promise<{}>}
@@ -42,7 +42,7 @@ module.exports.queryOne = async function fetchOne (pool, query, params) {
 
 /**
  *
- * @param {PG} pool
+ * @param {*} pool
  * @param {string} query
  * @param {Array} [params]
  * @returns {Promise<Array<{}>>}
