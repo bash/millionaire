@@ -26,6 +26,7 @@
     "postcss-cli": "^3.0.0-beta",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
+    "rollup-watch": "^4.3.1",
     "selenium-webdriver": "^3.3.0"
   },
   "dependencies": {

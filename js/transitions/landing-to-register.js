@@ -1,5 +1,9 @@
 import { finished } from '../animation'
 
+const getFontSize = ($element) => {
+  return Number.parseFloat(getComputedStyle($element).fontSize)
+}
+
 /**
  *
  * @param {AppView|HTMLElement} landing
@@ -11,15 +15,26 @@ export async function landingToRegister (landing, register) {
   const $links = landing.querySelector('.landing-page > .links')
 
   const $header = register.querySelector('.page-header')
+  const $headerTitle = $header.querySelector('a')
   const $content = register.querySelector('.page-content')
 
   $title.style.zIndex = 1
+  $title.style.transformOrigin = 'top'
   $header.style.backgroundColor = 'transparent'
   $header.style.color = 'transparent'
   $content.style.opacity = 0
 
   const titleBox = $title.getBoundingClientRect()
-  const transform = titleBox.top + window.scrollY
+  const headerBox = $header.getBoundingClientRect()
+  const headerTitleBox = $headerTitle.getBoundingClientRect()
+
+  const targetFontSize = getFontSize($headerTitle)
+  const currentFontSize = getFontSize($title)
+
+  const scale = targetFontSize / currentFontSize
+
+  const moveUp = titleBox.top + window.scrollY
+  const moveToCenter = (headerBox.height - titleBox.height * scale) / 2
 
   register.show()
 
@@ -46,7 +61,7 @@ export async function landingToRegister (landing, register) {
   const titleAnimation = $title.animate(
     [
       { transform: 'none' },
-      { transform: `translateY(-${transform}px) scale(.4) translateY(-${transform * 0.4 / 2}px) translateY(4px)` }
+      { transform: `translateY(-${moveUp}px) translateY(${moveToCenter}px) scale(${scale})` }
     ],
     {
       duration: 300,

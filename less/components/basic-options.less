@@ -1,12 +1,10 @@
 .basic-options {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -12px;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 24px;
+  align-items: end;
 
   > .option {
-    padding: 12px;
-    width: 50%;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -39,5 +37,9 @@
 
   > .option > input:checked + .label {
     opacity: @active-opacity;
+  }
+
+  @media (max-width: @content-breakpoint) {
+    grid-template-columns: 1fr;
   }
 }

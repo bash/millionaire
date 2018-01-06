@@ -24,24 +24,28 @@
                 <a href="/" is="app-link">Wer wird Millionär?</a>
             </div>
         </header>
+        <color-buttons></color-buttons>
     </template>
-</head>
-<body>
-    <!--
-        Consciousness and free will are just an illusion - mere tricks of the mind.
-    -->
-    <main>
-        <app-router></app-router>
-    </main>
 
-    <nav class="color-buttons">
+    <template id="color-buttons-template">
+      <nav class="color-buttons">
         <color-button class="button" color="#957871"></color-button>
         <color-button class="button" color="#79447B"></color-button>
         <color-button class="button" color="#463456"></color-button>
         <color-button class="button" color="#534980"></color-button>
         <color-button class="button" color="#44587B"></color-button>
         <color-button class="button" color="#447B55"></color-button>
-    </nav>
+      </nav>
+    </template>
+  </head>
+<body>
+    <!--
+        Consciousness and free will are just an illusion - mere tricks of the mind.
+    -->
+
+    <main>
+        <app-router></app-router>
+    </main>
 
     <script type="application/json" id="template-map">{}</script>
 
