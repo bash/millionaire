@@ -6,7 +6,7 @@ License: AGPL
 BuildArch: noarch
 Group: Applications/Internet
 Prefix: /usr
-Depends: make automake gcc gcc-c++
+# Depends: make automake gcc gcc-c++
 
 %description
 Millionaire
@@ -51,11 +51,11 @@ cp -R ./public/* $RPM_BUILD_ROOT/usr/share/nginx/html/millionaire/
 
 %post
 cd /usr/src/millionaire
-PATH="$PATH:/usr/local/bin" NODE_ENV=production /usr/local/bin/npm install
+NODE_ENV=production /usr/bin/npm install
 
 %files
 %defattr(-,root,root)
-/usr/src/millionaire/*
+/usr/src/millionaire
 /etc/systemd/system/millionaire.service
-/usr/share/millionaire/*
-/usr/share/nginx/html/millionaire/*
+/usr/share/millionaire
+/usr/share/nginx/html/millionaire
